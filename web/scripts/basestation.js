@@ -73,6 +73,13 @@ function setup() {
         });
         command_pub.publish(command);
     });
+
+    $("#btn_data").click(() => {
+        var command = new ROSLIB.Message({
+            data:"data"
+        });
+        command_pub.publish(command);
+    });
 }
 
 function update_log(message) {
