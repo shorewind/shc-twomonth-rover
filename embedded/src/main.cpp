@@ -41,7 +41,6 @@ void setup() {
   }
 
   delay(1000);
-  Serial.println("Time (s), Temperature (C), Pressure (hPa), Altitude (m)");
 
   // Set up oversampling and filter initialization
   bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
@@ -163,6 +162,8 @@ void setup() {
     Serial.println("6.66 KHz");
     break;
   }
+
+  Serial.println("Time (s), Temperature (*C), Pressure (hPa), Altitude (m), Accel X (m/s^2), Accel Y, Accel Z, Gyro X (rad/s), Gyro Y, Gyro Z");
 }
 
 void loop() {
@@ -178,6 +179,18 @@ void loop() {
       Serial.println("pong");
     } else if (command == "time") {
       Serial.println(millis());
+    } else if (command == "forward") {
+      Serial.println("move forward");
+    } else if (command == "backward") {
+      Serial.println("move backward");
+    } else if (command == "left") {
+      Serial.println("turn left");
+    } else if (command == "right") {
+      Serial.println("turn right");
+    } else if (command == "extend") {
+      Serial.println("extend arm");
+    } else if (command == "retract") {
+      Serial.println("retract arm");
     } else if (command == "data") {
       if (!bmp.performReading()) {
         Serial.println("Failed to perform reading :(");
@@ -185,21 +198,22 @@ void loop() {
         return;
       }
 
-      Serial.print("\nTime: ");
+      // Serial.print("Time: ");
       Serial.print(millis() / 1000.0);
-      Serial.println(" s");
-
-      Serial.print("Temperature: ");
+      // Serial.println(" s");
+      Serial.print(",");
+      // Serial.print("Temperature: ");
       Serial.print(bmp.temperature);
-      Serial.println(" *C");
-
-      Serial.print("Pressure: ");
+      // Serial.println(" *C");
+      Serial.print(",");
+      // Serial.print("Pressure: ");
       Serial.print(bmp.pressure / 100.0);
-      Serial.println(" hPa");
-
-      Serial.print("Approx. Altitude: ");
+      // Serial.println(" hPa");
+      Serial.print(",");
+      // Serial.print("Approx. Altitude: ");
       Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-      Serial.println(" m");
+      // Serial.println(" m");
+      Serial.print(",");
 
       /* Get a new normalized sensor event */
       sensors_event_t accel;
@@ -211,38 +225,38 @@ void loop() {
       // Serial.print(temp.temperature);
       // Serial.println(" deg C");
 
-      /* Display the results (acceleration is measured in m/s^2) */
-      Serial.print("Accel X: ");
-      Serial.print(accel.acceleration.x);
-      Serial.print(" \tY: ");
-      Serial.print(accel.acceleration.y);
-      Serial.print(" \tZ: ");
-      Serial.print(accel.acceleration.z);
-      Serial.println(" m/s^2 ");
+      // /* Display the results (acceleration is measured in m/s^2) */
+      // Serial.print("Accel X: ");
+      // Serial.print(accel.acceleration.x);
+      // Serial.print(" \tY: ");
+      // Serial.print(accel.acceleration.y);
+      // Serial.print(" \tZ: ");
+      // Serial.print(accel.acceleration.z);
+      // Serial.println(" m/s^2 ");
 
-      /* Display the results (rotation is measured in rad/s) */
-      Serial.print("Gyro X: ");
-      Serial.print(gyro.gyro.x);
-      Serial.print(" \tY: ");
-      Serial.print(gyro.gyro.y);
-      Serial.print(" \tZ: ");
-      Serial.print(gyro.gyro.z);
-      Serial.println(" radians/s ");
-
-      //  // serial plotter friendly format
-
-      //  Serial.print(temp.temperature);
-      //  Serial.print(",");
-
-      //  Serial.print(accel.acceleration.x);
-      //  Serial.print(","); Serial.print(accel.acceleration.y);
-      //  Serial.print(","); Serial.print(accel.acceleration.z);
-      //  Serial.print(",");
-
+      // /* Display the results (rotation is measured in rad/s) */
+      // Serial.print("Gyro X: ");
       // Serial.print(gyro.gyro.x);
-      // Serial.print(","); Serial.print(gyro.gyro.y);
-      // Serial.print(","); Serial.print(gyro.gyro.z);
-      // Serial.println();
+      // Serial.print(" \tY: ");
+      // Serial.print(gyro.gyro.y);
+      // Serial.print(" \tZ: ");
+      // Serial.print(gyro.gyro.z);
+      // Serial.println(" radians/s ");
+
+       // serial plotter friendly format
+
+       Serial.print(temp.temperature);
+       Serial.print(",");
+
+       Serial.print(accel.acceleration.x);
+       Serial.print(","); Serial.print(accel.acceleration.y);
+       Serial.print(","); Serial.print(accel.acceleration.z);
+       Serial.print(",");
+
+      Serial.print(gyro.gyro.x);
+      Serial.print(","); Serial.print(gyro.gyro.y);
+      Serial.print(","); Serial.print(gyro.gyro.z);
+      Serial.println();
       //  delayMicroseconds(10000);
     }
   }

@@ -18,6 +18,7 @@ function setup() {
     ros.on('connection', function () {
         console.log('Connected to websocket server.');
         rosbridge_status.val("Connected");
+        pico_log.text("Time (s), Temperature (*C), Pressure (hPa), Altitude (m), Accel X (m/s^2), Accel Y, Accel Z, Gyro X (rad/s), Gyro Y, Gyro Z");
     });
 
     ros.on('error', function (error) {
@@ -28,6 +29,7 @@ function setup() {
     ros.on('close', function () {
         console.log('Connection to websocket server closed.');
         rosbridge_status.val("Closed");
+        pico_log.text('');
     });
 
     pico_sub = new ROSLIB.Topic({
@@ -46,30 +48,78 @@ function setup() {
     $("#rosbridge_connect").click(connect_rosbridge);
 
     // Command Publishing
-    $("#btn_led_on").click(() => {
+    // $("#btn_led_on").click(() => {
+    //     var command = new ROSLIB.Message({
+    //         data:"led_on"
+    //     });
+    //     command_pub.publish(command);
+    // });
+
+    // $("#btn_led_off").click(() => {
+    //     var command = new ROSLIB.Message({
+    //         data:"led_off"
+    //     });
+    //     command_pub.publish(command);
+    // });
+
+    // $("#btn_ping").click(() => {
+    //     var command = new ROSLIB.Message({
+    //         data:"ping"
+    //     });
+    //     command_pub.publish(command);
+    // });
+    
+    // $("#btn_time").click(() => {
+    //     var command = new ROSLIB.Message({
+    //         data:"time"
+    //     });
+    //     command_pub.publish(command);
+    // });
+
+    $("#btn_forward").click(() => {
+        console.log("forward");
         var command = new ROSLIB.Message({
-            data:"led_on"
+            data:"forward"
         });
         command_pub.publish(command);
     });
 
-    $("#btn_led_off").click(() => {
+    $("#btn_backward").click(() => {
+        console.log("backward");
         var command = new ROSLIB.Message({
-            data:"led_off"
+            data:"backward"
         });
         command_pub.publish(command);
     });
 
-    $("#btn_ping").click(() => {
+    $("#btn_left").click(() => {
+        console.log("left");
         var command = new ROSLIB.Message({
-            data:"ping"
+            data:"left"
+        });
+        command_pub.publish(command);
+    });
+
+    $("#btn_right").click(() => {
+        console.log("right");
+        var command = new ROSLIB.Message({
+            data:"right"
         });
         command_pub.publish(command);
     });
     
-    $("#btn_time").click(() => {
+    $("#btn_extend").click(() => {
+        console.log("extend");
         var command = new ROSLIB.Message({
-            data:"time"
+            data:"extend"
+        });
+        command_pub.publish(command);
+    });
+        
+    $("#btn_retract").click(() => {
+        console.log("retract");
+        var command = new ROSLIB.Message({
+            data:"retract"
         });
         command_pub.publish(command);
     });
@@ -83,7 +133,7 @@ function setup() {
 }
 
 function update_log(message) {
-    var log = message.data;
+    var log = message.data;  // individual output
     var time = new Date().toTimeString().split(' ')[0];
     pico_log.text('[' + time + '] ' + log + pico_log.text());
 }
