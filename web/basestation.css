@@ -1,0 +1,20 @@
+#altitude {
+    float:left;
+    width:50%;
+    max-width:700px;
+}
+#accelerometer{
+    float:right; 
+    width:50%;
+    max-width:700px;
+}
+#temperature {
+    float:left;
+    width:50%;
+    max-width:700px;
+}
+#pressure{
+    float:right;
+    width:50%;
+    max-width:700px;
+}
