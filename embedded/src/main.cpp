@@ -163,7 +163,7 @@ void setup() {
     break;
   }
 
-  Serial.println("Time (s), Temperature (*C), Pressure (hPa), Altitude (m), Accel X (m/s^2), Accel Y, Accel Z, Gyro X (rad/s), Gyro Y, Gyro Z");
+  Serial.println("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z, Gyro X (rad/s), Gyro Y, Gyro Z");
 }
 
 void loop() {
@@ -198,21 +198,13 @@ void loop() {
         return;
       }
 
-      // Serial.print("Time: ");
       Serial.print(millis() / 1000.0);
-      // Serial.println(" s");
       Serial.print(",");
-      // Serial.print("Temperature: ");
-      Serial.print(bmp.temperature);
-      // Serial.println(" *C");
-      Serial.print(",");
-      // Serial.print("Pressure: ");
-      Serial.print(bmp.pressure / 100.0);
-      // Serial.println(" hPa");
-      Serial.print(",");
-      // Serial.print("Approx. Altitude: ");
       Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-      // Serial.println(" m");
+      Serial.print(",");
+      Serial.print(bmp.temperature);
+      Serial.print(",");
+      Serial.print(bmp.pressure / 100.0);
       Serial.print(",");
 
       /* Get a new normalized sensor event */
@@ -221,37 +213,10 @@ void loop() {
       sensors_event_t temp;
       sox.getEvent(&accel, &gyro, &temp);
 
-      // Serial.print("Temperature ");
-      // Serial.print(temp.temperature);
-      // Serial.println(" deg C");
-
-      // /* Display the results (acceleration is measured in m/s^2) */
-      // Serial.print("Accel X: ");
-      // Serial.print(accel.acceleration.x);
-      // Serial.print(" \tY: ");
-      // Serial.print(accel.acceleration.y);
-      // Serial.print(" \tZ: ");
-      // Serial.print(accel.acceleration.z);
-      // Serial.println(" m/s^2 ");
-
-      // /* Display the results (rotation is measured in rad/s) */
-      // Serial.print("Gyro X: ");
-      // Serial.print(gyro.gyro.x);
-      // Serial.print(" \tY: ");
-      // Serial.print(gyro.gyro.y);
-      // Serial.print(" \tZ: ");
-      // Serial.print(gyro.gyro.z);
-      // Serial.println(" radians/s ");
-
-       // serial plotter friendly format
-
-       Serial.print(temp.temperature);
-       Serial.print(",");
-
-       Serial.print(accel.acceleration.x);
-       Serial.print(","); Serial.print(accel.acceleration.y);
-       Serial.print(","); Serial.print(accel.acceleration.z);
-       Serial.print(",");
+      Serial.print(accel.acceleration.x);
+      Serial.print(","); Serial.print(accel.acceleration.y);
+      Serial.print(","); Serial.print(accel.acceleration.z);
+      Serial.print(",");
 
       Serial.print(gyro.gyro.x);
       Serial.print(","); Serial.print(gyro.gyro.y);

@@ -7,12 +7,9 @@
     <script src = "./scripts/basestation.js"></script>
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-    <link rel="stylesheet" href="basestation.css">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
-
 <body>
     <p></p>
     <div>
@@ -102,181 +99,34 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center">
-                        Altitude
-                    </h5>
-                    <form action="">
-                        <div class="form-group">
-                            <textarea class="form-control" style="height: 347px;" wrap="hard" readonly></textarea>
-                        </div>
-                    </form>
+                    <canvas id="altitude" height="205"></canvas>
                 </div>
             </div>
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title text-center">
-                        Pressure
-                    </h5>
-                    <form action="">
-                        <div class="form-group">
-                            <textarea class="form-control" style="height: 347px;" wrap="hard" readonly></textarea>
-                        </div>
-                    </form>
+                    <canvas id="pressure" height="205"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center">
-                        Temperature
-                    </h5>
-                    <form action="">
-                        <div class="form-group">
-                            <textarea class="form-control" style="height: 347px;" wrap="hard" readonly></textarea>
-                        </div>
-                    </form>
+                    <canvas id="temperature" height="205"></canvas>
                 </div>
             </div>
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title text-center">
-                        Acceleration
-                    </h5>
-                    <form action="">
-                        <div class="form-group">
-                            <textarea class="form-control" name="pico_text_area" id="pico_log" style="height: 347px;" wrap="hard" readonly></textarea>
-                        </div>
-                    </form>
+                    <canvas id="acceleration" height="205"></canvas>
                 </div>
             </div>
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title text-center">
-                        Gyroscope
-                    </h5>
-                    <form action="">
-                        <div class="form-group">
-                            <textarea class="form-control" name="pico_text_area" id="pico_log" style="height: 347px;" wrap="hard" readonly></textarea>
-                        </div>
-                    </form>
+                    <canvas id="gryoscope" height="205"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div>
-        <canvas id="altitude"></canvas>
-        <script>
-            var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-            var yValues = [7,8,8,9,9,9,10,11,14,14,15];
-            
-            new Chart("altitude", {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: yValues
-                }]
-            },
-            options: {
-                legend: {display: false},
-                scales: {
-                yAxes: [{ticks: {min: 6, max:16}}],
-                }
-            }
-            });
-        </script>
-    </div>
-    
-    <div>
-        <canvas id="accelerometer"></canvas>
-        <script>
-            var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-            var yValues = [7,8,8,9,9,9,10,11,14,14,15];
-            
-            new Chart("accelerometer", {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: yValues
-                }]
-            },
-            options: {
-                legend: {display: false},
-                scales: {
-                yAxes: [{ticks: {min: 6, max:16}}],
-                }
-            }
-            });
-        </script>
-    </div>
-
-    <div>
-        <canvas id="temperature"></canvas>
-        <script>
-            var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-            var yValues = [7,8,8,9,9,9,10,11,14,14,15];
-            
-            new Chart("temperature", {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: yValues
-                }]
-            },
-            options: {
-                legend: {display: false},
-                scales: {
-                yAxes: [{ticks: {min: 6, max:16}}],
-                }
-            }
-            });
-        </script>
-    </div>
-
-    <div>
-        <canvas id="pressure"></canvas>
-        <script>
-            var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-            var yValues = [7,8,8,9,9,9,10,11,14,14,15];
-            
-            new Chart("pressure", {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: yValues
-                }]
-            },
-            options: {
-                legend: {display: false},
-                scales: {
-                yAxes: [{ticks: {min: 6, max:16}}],
-                }
-            }
-            });
-        </script>
     </div>
 </body>

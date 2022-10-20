@@ -10,6 +10,12 @@ var command_pub;
 // Text box reference
 var pico_log;
 
+var alt_chart;
+var temp_chart;
+var press_chart;
+var accel_chart;
+var gryo_chart;
+
 function setup() {
     pico_log = $("#pico_log");
 
@@ -131,6 +137,191 @@ function setup() {
         });
         command_pub.publish(command);
     });
+
+    alt_chart = new Chart("altitude", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(0,0,255,1.0)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: []
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: "Altitude vs. Time"
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Altitude (m)"
+                    }
+                }]
+            }
+        }
+        });
+
+        temp_chart = new Chart("temperature", {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: []
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Temperature vs. Time"
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time (s)"
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Temperature (*C)"
+                        }
+                    }]
+                }
+            }
+        });
+
+        press_chart = new Chart("pressure", {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: []
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Pressure vs. Time"
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time (s)"
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Pressure (hPa)"
+                        }
+                    }]
+                }
+            }
+        });
+
+        accel_chart = new Chart("acceleration", {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: []
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Acceleration vs. Time"
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time (s)"
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Acceleration (m/s^2)"
+                        }
+                    }]
+                }
+            }
+        });
+
+        gryo_chart = new Chart("gryoscope", {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: []
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Gyroscope vs. Time"
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time (s)"
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Gyroscope (m)"
+                        }
+                    }]
+                }
+            }
+        });
 }
 
 window.addEventListener('keydown', function(event) {
@@ -157,18 +348,57 @@ window.addEventListener('keydown', function(event) {
     else if (key == 'E'){
         $("#btn_retract").click();
     }
+    else if (key == 'P'){
+        console.log("plot");
+        var time = new Date().toTimeString().split(' ')[0];
+        addData(alt_chart, time, Math.floor(Math.random()*6));
+        addData(temp_chart, time, Math.floor(Math.random()*6));
+        addData(press_chart, time, Math.floor(Math.random()*6));
+        addData(accel_chart, time, Math.floor(Math.random()*6));
+        addData(gryo_chart, time, Math.floor(Math.random()*6));
+    }
 });
+
+var time_values = [];
+var altitude_values = [];
 
 function update_log(message) {
     var log = message.data;  // individual output
     var time = new Date().toTimeString().split(' ')[0];
     pico_log.text('[' + time + '] ' + log + pico_log.text());
+    var data_array = log.split(',');
+    if (!isNaN(data_array[0][0])) {
+        time_values.push(data_array[0]);
+        altitude_values.push(data_array[1]);
+        addData(alt_chart, data_array[0], data_array[1]);
+    }
 }
 
 function connect_rosbridge() {
     var address = "ws://" + $("#rosbridge_address").val();
-
     ros.connect(address);
+}
+
+function plot() {
+    alt_chart = new Chart("altitude", {
+    type: "line",
+    data: {
+        labels: [],
+        datasets: [{
+        fill: false,
+        lineTension: 0,
+        backgroundColor: "rgba(0,0,255,1.0)",
+        borderColor: "rgba(0,0,255,0.1)",
+        data: []
+        }]
+    },
+    options: {
+        legend: {display: false},
+        scales: {
+        yAxes: [{ticks: {min: 6, max:16}}],
+        }
+    }
+    });
 }
 
 function addData(chart, label, data) {
@@ -188,3 +418,4 @@ function removeData(chart) {
 }
 
 window.onload = setup;
+// window.onload = plot;
