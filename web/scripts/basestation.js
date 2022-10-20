@@ -125,12 +125,39 @@ function setup() {
     });
 
     $("#btn_data").click(() => {
+        console.log("data");
         var command = new ROSLIB.Message({
             data:"data"
         });
         command_pub.publish(command);
     });
 }
+
+window.addEventListener('keydown', function(event) {
+    const key = event.key.toUpperCase()
+    event.preventDefault();
+    if (key == 'ENTER'){
+        $("#btn_data").click();
+    }
+    else if (key == 'W'){
+        $("#btn_forward").click();
+    }
+    else if (key == 'S'){
+        $("#btn_backward").click();
+    }
+    else if (key == 'A'){
+        $("#btn_left").click();
+    }
+    else if (key == 'D'){
+        $("#btn_right").click();
+    }
+    else if (key == 'Q'){
+        $("#btn_extend").click();
+    }
+    else if (key == 'E'){
+        $("#btn_retract").click();
+    }
+});
 
 function update_log(message) {
     var log = message.data;  // individual output
