@@ -102,7 +102,7 @@ function setup() {
     });
 
     $("#btn_data").click(() => {
-        download()
+        download();
     });
 
     Chart.defaults.global.defaultFontColor = 'black';
@@ -275,26 +275,26 @@ function setup() {
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
     event.preventDefault();
-    if (key == 'W'){
+    if (key == 'W') {
         $("#btn_forward").click();
     }
-    else if (key == 'S'){
+    else if (key == 'S') {
         $("#btn_backward").click();
     }
-    else if (key == 'A'){
+    else if (key == 'A') {
         $("#btn_left").click();
     }
-    else if (key == 'D'){
+    else if (key == 'D') {
         $("#btn_right").click();
     }
-    else if (key == 'Q'){
+    else if (key == 'Q') {
         $("#btn_extend").click();
     }
-    else if (key == 'E'){
+    else if (key == 'E') {
         $("#btn_retract").click();
     }
     // temp random data generation
-    else if (key == 'P'){
+    else if (key == 'P') {
         console.log("plot");
         var time = new Date().toTimeString().split(' ')[0];
         addData(alt_chart, Math.floor(Math.random()*6));
@@ -304,6 +304,13 @@ window.addEventListener('keydown', function(event) {
         addAccelData(accel_chart, 0, Math.floor(Math.random()*6));
         addAccelData(accel_chart, 1, Math.floor(Math.random()*6));
         addAccelData(accel_chart, 2, Math.floor(Math.random()*6));
+    }
+    else if (key == "ENTER") {  // temp manual data collection command
+        console.log("data");
+        var command = new ROSLIB.Message({
+            data:"data"
+        });
+        command_pub.publish(command);
     }
 });
 
@@ -336,6 +343,7 @@ function update_log(message) {
     }
 }
 
+// download data as csv
 function download() {
     rows.forEach(function(row_array) {
         let row = row_array.join(',');
@@ -370,14 +378,6 @@ function addTimeData(time) {
 
 function addAccelData(chart, index, data) {
     chart.data.datasets[index].data.push(data);
-    chart.update();
-}
-
-function removeData(chart) {
-    chart.data.labels.pop();
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.pop();
-    });
     chart.update();
 }
 
