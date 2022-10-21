@@ -65,28 +65,6 @@ void setup() {
     break;
   }
 
- /* // sox.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS );
-  Serial.print("Gyro range set to: ");
-  switch (sox.getGyroRange()) {
-  case LSM6DS_GYRO_RANGE_125_DPS:
-    Serial.println("125 degrees/s");
-    break;
-  case LSM6DS_GYRO_RANGE_250_DPS:
-    Serial.println("250 degrees/s");
-    break;
-  case LSM6DS_GYRO_RANGE_500_DPS:
-    Serial.println("500 degrees/s");
-    break;
-  case LSM6DS_GYRO_RANGE_1000_DPS:
-    Serial.println("1000 degrees/s");
-    break;
-  case LSM6DS_GYRO_RANGE_2000_DPS:
-    Serial.println("2000 degrees/s");
-    break;
-  case ISM330DHCX_GYRO_RANGE_4000_DPS:
-    break; // unsupported range for the DSOX
-  } */
-
   // sox.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
   Serial.print("Accelerometer data rate set to: ");
   switch (sox.getAccelDataRate()) {
@@ -125,48 +103,43 @@ void setup() {
     break;
   }
 
- /* // sox.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
-  Serial.print("Gyro data rate set to: ");
-  switch (sox.getGyroDataRate()) {
-  case LSM6DS_RATE_SHUTDOWN:
-    Serial.println("0 Hz");
-    break;
-  case LSM6DS_RATE_12_5_HZ:
-    Serial.println("12.5 Hz");
-    break;
-  case LSM6DS_RATE_26_HZ:
-    Serial.println("26 Hz");
-    break;
-  case LSM6DS_RATE_52_HZ:
-    Serial.println("52 Hz");
-    break;
-  case LSM6DS_RATE_104_HZ:
-    Serial.println("104 Hz");
-    break;
-  case LSM6DS_RATE_208_HZ:
-    Serial.println("208 Hz");
-    break;
-  case LSM6DS_RATE_416_HZ:
-    Serial.println("416 Hz");
-    break;
-  case LSM6DS_RATE_833_HZ:
-    Serial.println("833 Hz");
-    break;
-  case LSM6DS_RATE_1_66K_HZ:
-    Serial.println("1.66 KHz");
-    break;
-  case LSM6DS_RATE_3_33K_HZ:
-    Serial.println("3.33 KHz");
-    break;
-  case LSM6DS_RATE_6_66K_HZ:
-    Serial.println("6.66 KHz");
-    break;
-  }*/
-
   Serial.println("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z");
 }
 
+int last_read = 0;
+
 void loop() {
+  if (millis() - last_read > 500) {
+    if (!bmp.performReading()) {
+      Serial.println("Failed to perform reading :(");
+      delay(100);
+      return;
+    }
+
+    Serial.print(millis() / 1000.0);
+    Serial.print(",");
+    Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
+    Serial.print(",");
+    Serial.print(bmp.temperature);
+    Serial.print(",");
+    Serial.print(bmp.pressure / 100.0);
+    Serial.print(",");
+
+    // Get a new normalized sensor event
+    sensors_event_t accel;
+    sensors_event_t gyro;
+    sensors_event_t temp;
+    sox.getEvent(&accel, &gyro, &temp);
+
+    Serial.print(accel.acceleration.x);
+    Serial.print(","); Serial.print(accel.acceleration.y);
+    Serial.print(","); Serial.print(accel.acceleration.z);
+    Serial.print(",");
+    Serial.println();
+
+    last_read = millis();
+  }
+  
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     command.trim();
@@ -183,45 +156,6 @@ void loop() {
       Serial.println("extend arm");
     } else if (command == "retract") {
       Serial.println("retract arm");
-    }
-
-    int last_read = 0;
-
-    if (millis() - last_read > 500) {
-      if (!bmp.performReading()) {
-        Serial.println("Failed to perform reading :(");
-        delay(100);
-        return;
-      }
-
-      Serial.print(millis() / 1000.0);
-      Serial.print(",");
-      Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-      Serial.print(",");
-      Serial.print(bmp.temperature);
-      Serial.print(",");
-      Serial.print(bmp.pressure / 100.0);
-      Serial.print(",");
-
-      // Get a new normalized sensor event
-      sensors_event_t accel;
-      sensors_event_t gyro;
-      sensors_event_t temp;
-      sox.getEvent(&accel, &gyro, &temp);
-
-      Serial.print(accel.acceleration.x);
-      Serial.print(","); Serial.print(accel.acceleration.y);
-      Serial.print(","); Serial.print(accel.acceleration.z);
-      Serial.print(",");
-      Serial.println();
-
-      // Serial.print(gyro.gyro.x);
-      // Serial.print(","); Serial.print(gyro.gyro.y);
-      // Serial.print(","); Serial.print(gyro.gyro.z);
-      // Serial.println();
-      //  delayMicroseconds(10000);
-
-      last_read = millis();
     }
   }
 }

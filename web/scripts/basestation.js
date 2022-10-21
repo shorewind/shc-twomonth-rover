@@ -24,7 +24,7 @@ function setup() {
     ros.on('connection', function () {
         console.log('Connected to websocket server.');
         rosbridge_status.val("Connected");
-        pico_log.text("Time (s), Temperature (*C), Pressure (hPa), Altitude (m), Accel X (m/s^2), Accel Y, Accel Z, Gyro X (rad/s), Gyro Y, Gyro Z");
+        pico_log.text("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z");
     });
 
     ros.on('error', function (error) {
@@ -106,80 +106,6 @@ function setup() {
     });
 
     Chart.defaults.global.defaultFontColor = 'black';
-
-    // rot_chart = new Chart("rotation", {
-    //     type: "line",
-    //     data: {
-    //         labels: [],
-    //         datasets: [{
-    //         fill: false,
-    //         lineTension: 0,
-    //         backgroundColor: "rgba(200,0,0,1.0)",
-    //         borderColor: "rgba(200,0,0,0.5)",
-    //         data: []
-    //         }]
-    //     },
-    //     options: {
-    //         legend: {
-    //             display: false
-    //         },
-    //         title: {
-    //             display: true,
-    //             text: "Wheel Angular Velocity vs. Time"
-    //         },
-    //         scales: {
-    //             xAxes: [{
-    //                 scaleLabel: {
-    //                     display: true,
-    //                     labelString: "Time (s)"
-    //                 }
-    //             }],
-    //             yAxes: [{
-    //                 scaleLabel: {
-    //                     display: true,
-    //                     labelString: "Angular Velocity (rad/s)"
-    //                 }
-    //             }]
-    //         }
-    //     }
-    // });
-
-    // dist_chart = new Chart("distance", {
-    //     type: "line",
-    //     data: {
-    //         labels: [],
-    //         datasets: [{
-    //         fill: false,
-    //         lineTension: 0,
-    //         backgroundColor: "rgba(200,0,255,1.0)",
-    //         borderColor: "rgba(200,0,255,0.5)",
-    //         data: []
-    //         }]
-    //     },
-    //     options: {
-    //         legend: {
-    //             display: false
-    //         },
-    //         title: {
-    //             display: true,
-    //             text: "Distance vs. Time"
-    //         },
-    //         scales: {
-    //             xAxes: [{
-    //                 scaleLabel: {
-    //                     display: true,
-    //                     labelString: "Time (s)"
-    //                 }
-    //             }],
-    //             yAxes: [{
-    //                 scaleLabel: {
-    //                     display: true,
-    //                     labelString: "Distance (m)"
-    //                 }
-    //             }]
-    //         }
-    //     }
-    // });
 
     alt_chart = new Chart("altitude", {
         type: "line",
@@ -297,16 +223,32 @@ function setup() {
         data: {
             labels: [],
             datasets: [{
+                label: "X",
                 fill: false,
                 lineTension: 0,
                 backgroundColor: "rgba(0,200,0,1.0)",
                 borderColor: "rgba(0,200,0,0.5)",
                 data: [],
-                }]
+                },{
+                label: "Y",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(200,0,0,1.0)",
+                borderColor: "rgba(200,0,0,0.5)",
+                data: [],
+                },{
+                label: "Z",
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,200,1.0)",
+                borderColor: "rgba(0,0,200,0.5)",
+                data: [],
+                }
+            ]
         },
         options: {
             legend: {
-                display: false
+                display: true,
             },
             title: {
                 display: true,
@@ -351,6 +293,18 @@ window.addEventListener('keydown', function(event) {
     else if (key == 'E'){
         $("#btn_retract").click();
     }
+    // temp random data generation
+    else if (key == 'P'){
+        console.log("plot");
+        var time = new Date().toTimeString().split(' ')[0];
+        addData(alt_chart, Math.floor(Math.random()*6));
+        addData(temp_chart, Math.floor(Math.random()*6));
+        addData(press_chart, Math.floor(Math.random()*6));
+        addTimeData(time);
+        addAccelData(accel_chart, 0, Math.floor(Math.random()*6));
+        addAccelData(accel_chart, 1, Math.floor(Math.random()*6));
+        addAccelData(accel_chart, 2, Math.floor(Math.random()*6));
+    }
 });
 
 var rows = [];
@@ -367,11 +321,16 @@ function update_log(message) {
         let alt = data_array[1];
         let temp = data_array[2];
         let press = data_array[3];
-        let accel = data_array[4];
-        addData(alt_chart, time, alt);
-        addData(temp_chart, time, temp);
-        addData(press_chart, time, press);
-        addData(accel_chart, time, accel);
+        let accel_x = data_array[4];
+        let accel_y = data_array[5];
+        let accel_z = data_array[6];
+        addTimeData(time);
+        addData(alt_chart, alt);
+        addData(temp_chart, temp);
+        addData(press_chart,  press);
+        addAccelData(accel_chart, 0, accel_x);
+        addAccelData(accel_chart, 1, accel_y);
+        addAccelData(accel_chart, 2, accel_z);
 
         rows.push(data_array);
     }
@@ -397,11 +356,20 @@ function connect_rosbridge() {
     ros.connect(address);
 }
 
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-    });
+function addData(chart, data) {
+    chart.data.datasets[0].data.push(data);
+    chart.update();
+}
+
+function addTimeData(time) {
+    alt_chart.data.labels.push(time);
+    temp_chart.data.labels.push(time);
+    press_chart.data.labels.push(time);
+    accel_chart.data.labels.push(time);
+}
+
+function addAccelData(chart, index, data) {
+    chart.data.datasets[index].data.push(data);
     chart.update();
 }
 
