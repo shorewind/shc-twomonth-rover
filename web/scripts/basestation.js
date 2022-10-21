@@ -140,79 +140,79 @@ function setup() {
 
     Chart.defaults.global.defaultFontColor = 'black';
 
-    rot_chart = new Chart("rotation", {
-        type: "line",
-        data: {
-            labels: [],
-            datasets: [{
-            fill: false,
-            lineTension: 0,
-            backgroundColor: "rgba(200,0,0,1.0)",
-            borderColor: "rgba(200,0,0,0.5)",
-            data: []
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            title: {
-                display: true,
-                text: "Wheel Angular Velocity vs. Time"
-            },
-            scales: {
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Time (s)"
-                    }
-                }],
-                yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Angular Velocity (rad/s)"
-                    }
-                }]
-            }
-        }
-    });
+    // rot_chart = new Chart("rotation", {
+    //     type: "line",
+    //     data: {
+    //         labels: [],
+    //         datasets: [{
+    //         fill: false,
+    //         lineTension: 0,
+    //         backgroundColor: "rgba(200,0,0,1.0)",
+    //         borderColor: "rgba(200,0,0,0.5)",
+    //         data: []
+    //         }]
+    //     },
+    //     options: {
+    //         legend: {
+    //             display: false
+    //         },
+    //         title: {
+    //             display: true,
+    //             text: "Wheel Angular Velocity vs. Time"
+    //         },
+    //         scales: {
+    //             xAxes: [{
+    //                 scaleLabel: {
+    //                     display: true,
+    //                     labelString: "Time (s)"
+    //                 }
+    //             }],
+    //             yAxes: [{
+    //                 scaleLabel: {
+    //                     display: true,
+    //                     labelString: "Angular Velocity (rad/s)"
+    //                 }
+    //             }]
+    //         }
+    //     }
+    // });
 
-    dist_chart = new Chart("distance", {
-        type: "line",
-        data: {
-            labels: [],
-            datasets: [{
-            fill: false,
-            lineTension: 0,
-            backgroundColor: "rgba(200,0,255,1.0)",
-            borderColor: "rgba(200,0,255,0.5)",
-            data: []
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            title: {
-                display: true,
-                text: "Distance vs. Time"
-            },
-            scales: {
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Time (s)"
-                    }
-                }],
-                yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Distance (m)"
-                    }
-                }]
-            }
-        }
-    });
+    // dist_chart = new Chart("distance", {
+    //     type: "line",
+    //     data: {
+    //         labels: [],
+    //         datasets: [{
+    //         fill: false,
+    //         lineTension: 0,
+    //         backgroundColor: "rgba(200,0,255,1.0)",
+    //         borderColor: "rgba(200,0,255,0.5)",
+    //         data: []
+    //         }]
+    //     },
+    //     options: {
+    //         legend: {
+    //             display: false
+    //         },
+    //         title: {
+    //             display: true,
+    //             text: "Distance vs. Time"
+    //         },
+    //         scales: {
+    //             xAxes: [{
+    //                 scaleLabel: {
+    //                     display: true,
+    //                     labelString: "Time (s)"
+    //                 }
+    //             }],
+    //             yAxes: [{
+    //                 scaleLabel: {
+    //                     display: true,
+    //                     labelString: "Distance (m)"
+    //                 }
+    //             }]
+    //         }
+    //     }
+    // });
 
     alt_chart = new Chart("altitude", {
         type: "line",
@@ -394,13 +394,17 @@ window.addEventListener('keydown', function(event) {
         addData(temp_chart, time, Math.floor(Math.random()*6));
         addData(press_chart, time, Math.floor(Math.random()*6));
         addData(accel_chart, time, Math.floor(Math.random()*6));
-        addData(rot_chart, time, Math.floor(Math.random()*6));
-        addData(dist_chart, time, Math.floor(Math.random()*6));
+        // addData(rot_chart, time, Math.floor(Math.random()*6));
+        // addData(dist_chart, time, Math.floor(Math.random()*6));
+    }
+    else if (key == 'L'){
+        download();
     }
 });
 
-var time_values = [];
-var altitude_values = [];
+var rows = [];
+
+let csv_content = "data:text/csv;charset=utf-8,";
 
 function update_log(message) {
     var log = message.data;  // individual output
@@ -408,37 +412,38 @@ function update_log(message) {
     pico_log.text('[' + time + '] ' + log + pico_log.text());
     var data_array = log.split(',');
     if (!isNaN(data_array[0][0])) {
-        time_values.push(data_array[0]);
-        altitude_values.push(data_array[1]);
-        addData(alt_chart, data_array[0], data_array[1]);
+        let time = data_array[0];
+        let alt = data_array[1];
+        let temp = data_array[2];
+        let press = data_array[3];
+        let accel = data_array[4];
+        addData(alt_chart, time, alt);
+        addData(temp_chart, time, temp);
+        addData(press_chart, time, press);
+        addData(accel_chart, time, accel);
+
+        rows.push(data_array);
     }
+}
+
+function download() {
+    rows.forEach(function(row_array) {
+        let row = row_array.join(',');
+        csv_content += row + "\r\n";
+    });
+
+    var encoded_uri = encodeURI(csv_content);
+    var link = document.createElement('a');
+    link.setAttribute("href", encoded_uri);
+    link.setAttribute("download", "shc-twomonth-rover-data.csv");
+    document.body.appendChild(link);
+
+    link.click();
 }
 
 function connect_rosbridge() {
     var address = "ws://" + $("#rosbridge_address").val();
     ros.connect(address);
-}
-
-function plot() {
-    alt_chart = new Chart("altitude", {
-    type: "line",
-    data: {
-        labels: [],
-        datasets: [{
-        fill: false,
-        lineTension: 0,
-        backgroundColor: "rgba(0,0,255,1.0)",
-        borderColor: "rgba(0,0,255,0.1)",
-        data: []
-        }]
-    },
-    options: {
-        legend: {display: false},
-        scales: {
-        yAxes: [{ticks: {min: 6, max:16}}],
-        }
-    }
-    });
 }
 
 function addData(chart, label, data) {
@@ -458,4 +463,3 @@ function removeData(chart) {
 }
 
 window.onload = setup;
-// window.onload = plot;
