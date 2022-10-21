@@ -138,6 +138,82 @@ function setup() {
         command_pub.publish(command);
     });
 
+    Chart.defaults.global.defaultFontColor = 'black';
+
+    rot_chart = new Chart("rotation", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(200,0,0,1.0)",
+            borderColor: "rgba(200,0,0,0.5)",
+            data: []
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: "Wheel Angular Velocity vs. Time"
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Angular Velocity (rad/s)"
+                    }
+                }]
+            }
+        }
+    });
+
+    dist_chart = new Chart("distance", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(200,0,255,1.0)",
+            borderColor: "rgba(200,0,255,0.5)",
+            data: []
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: "Distance vs. Time"
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Distance (m)"
+                    }
+                }]
+            }
+        }
+    });
+
     alt_chart = new Chart("altitude", {
         type: "line",
         data: {
@@ -146,7 +222,7 @@ function setup() {
             fill: false,
             lineTension: 0,
             backgroundColor: "rgba(0,0,255,1.0)",
-            borderColor: "rgba(0,0,255,0.1)",
+            borderColor: "rgba(0,0,255,0.5)",
             data: []
             }]
         },
@@ -173,155 +249,118 @@ function setup() {
                 }]
             }
         }
-        });
+    });
 
-        temp_chart = new Chart("temperature", {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{
+    temp_chart = new Chart("temperature", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(255,200,0,1.0)",
+            borderColor: "rgba(255,200,0,0.5)",
+            data: []
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: "Temperature vs. Time"
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Temperature (*C)"
+                    }
+                }]
+            }
+        }
+    });
+
+    press_chart = new Chart("pressure", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(255,125,0,1.0)",
+            borderColor: "rgba(255,125,0,0.5)",
+            data: []
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: "Pressure vs. Time"
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Pressure (hPa)"
+                    }
+                }]
+            }
+        }
+    });
+
+    accel_chart = new Chart("acceleration", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
                 fill: false,
                 lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: []
+                backgroundColor: "rgba(0,200,0,1.0)",
+                borderColor: "rgba(0,200,0,0.5)",
+                data: [],
                 }]
+        },
+        options: {
+            legend: {
+                display: false
             },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Temperature vs. Time"
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Time (s)"
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Temperature (*C)"
-                        }
-                    }]
-                }
-            }
-        });
-
-        press_chart = new Chart("pressure", {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: []
+            title: {
+                display: true,
+                text: "Acceleration vs. Time"
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Acceleration (m/s^2)"
+                    }
                 }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Pressure vs. Time"
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Time (s)"
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Pressure (hPa)"
-                        }
-                    }]
-                }
             }
-        });
-
-        accel_chart = new Chart("acceleration", {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: []
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Acceleration vs. Time"
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Time (s)"
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Acceleration (m/s^2)"
-                        }
-                    }]
-                }
-            }
-        });
-
-        gryo_chart = new Chart("gryoscope", {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: []
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Gyroscope vs. Time"
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Time (s)"
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Gyroscope (m)"
-                        }
-                    }]
-                }
-            }
-        });
+        }
+    });
 }
 
 window.addEventListener('keydown', function(event) {
@@ -355,7 +394,8 @@ window.addEventListener('keydown', function(event) {
         addData(temp_chart, time, Math.floor(Math.random()*6));
         addData(press_chart, time, Math.floor(Math.random()*6));
         addData(accel_chart, time, Math.floor(Math.random()*6));
-        addData(gryo_chart, time, Math.floor(Math.random()*6));
+        addData(rot_chart, time, Math.floor(Math.random()*6));
+        addData(dist_chart, time, Math.floor(Math.random()*6));
     }
 });
 

@@ -36,25 +36,25 @@
                         <button type="button" class="btn btn-info" id="btn_time">
                             Time
                         </button> -->
-                        <button type="button" class="btn btn-primary" id="btn_forward">
+                        <button type="button" class="btn btn-outline-primary" id="btn_forward">
                             Move Forward
                         </button>
-                        <button type="button" class="btn btn-danger" id="btn_backward">
+                        <button type="button" class="btn btn-outline-primary" id="btn_backward">
                             Move Backward
                         </button>
-                        <button type="button" class="btn btn-warning" id="btn_left">
+                        <button type="button" class="btn btn-outline-primary" id="btn_left">
                             Turn Left
                         </button>
-                        <button type="button" class="btn btn-info" id="btn_right">
+                        <button type="button" class="btn btn-outline-primary" id="btn_right">
                             Turn Right
                         </button>
-                        <button type="button" class="btn btn-dark" id="btn_extend">
+                        <button type="button" class="btn btn-outline-info" id="btn_extend">
                             Extend Arm
                         </button>
-                        <button type="button" class="btn btn-dark" id="btn_retract">
+                        <button type="button" class="btn btn-outline-info" id="btn_retract">
                             Retract Arm
                         </button>
-                        <button type="button" class="btn btn-secondary" id="btn_data">
+                        <button type="button" class="btn btn-outline-secondary" id="btn_data">
                             Data
                         </button>
                     </div>
@@ -102,6 +102,11 @@
         <div class="col-4">
             <div class="card">
                 <div class="card-body">
+                    <canvas id="rotation" height="205"></canvas>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
                     <canvas id="altitude" height="205"></canvas>
                 </div>
             </div>
@@ -114,17 +119,17 @@
         <div class="col-4">
             <div class="card">
                 <div class="card-body">
+                    <canvas id="distance" height="205"></canvas>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
                     <canvas id="temperature" height="205"></canvas>
                 </div>
             </div>
             <div class="card mt-3">
                 <div class="card-body">
                     <canvas id="acceleration" height="205"></canvas>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <canvas id="gryoscope" height="205"></canvas>
                 </div>
             </div>
         </div>
