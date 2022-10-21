@@ -146,6 +146,8 @@ void loop() {
 
     if (command == "forward") {
       Serial.println("move forward");
+    } else if (command == "ping") {
+      Serial.println("pong");
     } else if (command == "backward") {
       Serial.println("move backward");
     } else if (command == "left") {
