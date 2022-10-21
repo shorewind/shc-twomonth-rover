@@ -53,35 +53,6 @@ function setup() {
 
     $("#rosbridge_connect").click(connect_rosbridge);
 
-    // Command Publishing
-    // $("#btn_led_on").click(() => {
-    //     var command = new ROSLIB.Message({
-    //         data:"led_on"
-    //     });
-    //     command_pub.publish(command);
-    // });
-
-    // $("#btn_led_off").click(() => {
-    //     var command = new ROSLIB.Message({
-    //         data:"led_off"
-    //     });
-    //     command_pub.publish(command);
-    // });
-
-    // $("#btn_ping").click(() => {
-    //     var command = new ROSLIB.Message({
-    //         data:"ping"
-    //     });
-    //     command_pub.publish(command);
-    // });
-    
-    // $("#btn_time").click(() => {
-    //     var command = new ROSLIB.Message({
-    //         data:"time"
-    //     });
-    //     command_pub.publish(command);
-    // });
-
     $("#btn_forward").click(() => {
         console.log("forward");
         var command = new ROSLIB.Message({
@@ -131,11 +102,7 @@ function setup() {
     });
 
     $("#btn_data").click(() => {
-        console.log("data");
-        var command = new ROSLIB.Message({
-            data:"data"
-        });
-        command_pub.publish(command);
+        download()
     });
 
     Chart.defaults.global.defaultFontColor = 'black';
@@ -366,10 +333,7 @@ function setup() {
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
     event.preventDefault();
-    if (key == 'ENTER'){
-        $("#btn_data").click();
-    }
-    else if (key == 'W'){
+    if (key == 'W'){
         $("#btn_forward").click();
     }
     else if (key == 'S'){
@@ -386,19 +350,6 @@ window.addEventListener('keydown', function(event) {
     }
     else if (key == 'E'){
         $("#btn_retract").click();
-    }
-    else if (key == 'P'){
-        console.log("plot");
-        var time = new Date().toTimeString().split(' ')[0];
-        addData(alt_chart, time, Math.floor(Math.random()*6));
-        addData(temp_chart, time, Math.floor(Math.random()*6));
-        addData(press_chart, time, Math.floor(Math.random()*6));
-        addData(accel_chart, time, Math.floor(Math.random()*6));
-        // addData(rot_chart, time, Math.floor(Math.random()*6));
-        // addData(dist_chart, time, Math.floor(Math.random()*6));
-    }
-    else if (key == 'L'){
-        download();
     }
 });
 
@@ -429,7 +380,7 @@ function update_log(message) {
 function download() {
     rows.forEach(function(row_array) {
         let row = row_array.join(',');
-        csv_content += row + "\r\n";
+        csv_content += row;
     });
 
     var encoded_uri = encodeURI(csv_content);

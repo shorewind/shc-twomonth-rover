@@ -171,15 +171,7 @@ void loop() {
     String command = Serial.readStringUntil('\n');
     command.trim();
 
-    if (command == "led_on") {
-      digitalWrite(LED_PIN, HIGH);
-    } else if (command == "led_off") {
-      digitalWrite(LED_PIN, LOW);
-    } else if (command == "ping") {
-      Serial.println("pong");
-    } else if (command == "time") {
-      Serial.println(millis());
-    } else if (command == "forward") {
+    if (command == "forward") {
       Serial.println("move forward");
     } else if (command == "backward") {
       Serial.println("move backward");
@@ -191,34 +183,9 @@ void loop() {
       Serial.println("extend arm");
     } else if (command == "retract") {
       Serial.println("retract arm");
-    } else if (command == "data") {
-      if (!bmp.performReading()) {
-        Serial.println("Failed to perform reading :(");
-        delay(100);
-        return;
-      }
-      Serial.print(millis() / 1000.0);
-      Serial.print(",");
-      Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-      Serial.print(",");
-      Serial.print(bmp.temperature);
-      Serial.print(",");
-      Serial.print(bmp.pressure / 100.0);
-      Serial.print(",");
+    }
 
-      sensors_event_t accel;
-      sensors_event_t gyro;
-      sensors_event_t temp;
-      sox.getEvent(&accel, &gyro, &temp);
-
-      Serial.print(accel.acceleration.x);
-      Serial.print(","); Serial.print(accel.acceleration.y);
-      Serial.print(","); Serial.print(accel.acceleration.z);
-      Serial.print(",");
-      Serial.println();
-      }
-
-    /*int last_read = 0;
+    int last_read = 0;
 
     if (millis() - last_read > 500) {
       if (!bmp.performReading()) {
@@ -255,6 +222,6 @@ void loop() {
       //  delayMicroseconds(10000);
 
       last_read = millis();
-    } */
+    }
   }
 }
