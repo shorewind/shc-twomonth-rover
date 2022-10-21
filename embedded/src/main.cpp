@@ -65,7 +65,7 @@ void setup() {
     break;
   }
 
-  // sox.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS );
+ /* // sox.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS );
   Serial.print("Gyro range set to: ");
   switch (sox.getGyroRange()) {
   case LSM6DS_GYRO_RANGE_125_DPS:
@@ -85,7 +85,7 @@ void setup() {
     break;
   case ISM330DHCX_GYRO_RANGE_4000_DPS:
     break; // unsupported range for the DSOX
-  }
+  } */
 
   // sox.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
   Serial.print("Accelerometer data rate set to: ");
@@ -125,7 +125,7 @@ void setup() {
     break;
   }
 
-  // sox.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
+ /* // sox.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
   Serial.print("Gyro data rate set to: ");
   switch (sox.getGyroDataRate()) {
   case LSM6DS_RATE_SHUTDOWN:
@@ -161,9 +161,9 @@ void setup() {
   case LSM6DS_RATE_6_66K_HZ:
     Serial.println("6.66 KHz");
     break;
-  }
+  }*/
 
-  Serial.println("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z, Gyro X (rad/s), Gyro Y, Gyro Z");
+  Serial.println("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z");
 }
 
 void loop() {
@@ -171,15 +171,7 @@ void loop() {
     String command = Serial.readStringUntil('\n');
     command.trim();
 
-    if (command == "led_on") {
-      digitalWrite(LED_PIN, HIGH);
-    } else if (command == "led_off") {
-      digitalWrite(LED_PIN, LOW);
-    } else if (command == "ping") {
-      Serial.println("pong");
-    } else if (command == "time") {
-      Serial.println(millis());
-    } else if (command == "forward") {
+    if (command == "forward") {
       Serial.println("move forward");
     } else if (command == "backward") {
       Serial.println("move backward");
@@ -191,10 +183,14 @@ void loop() {
       Serial.println("extend arm");
     } else if (command == "retract") {
       Serial.println("retract arm");
-    } else if (command == "data") {
+    }
+
+    int last_read = 0;
+
+    if (millis() - last_read > 500) {
       if (!bmp.performReading()) {
         Serial.println("Failed to perform reading :(");
-        delay(2000);
+        delay(100);
         return;
       }
 
@@ -207,7 +203,7 @@ void loop() {
       Serial.print(bmp.pressure / 100.0);
       Serial.print(",");
 
-      /* Get a new normalized sensor event */
+      // Get a new normalized sensor event
       sensors_event_t accel;
       sensors_event_t gyro;
       sensors_event_t temp;
@@ -217,12 +213,15 @@ void loop() {
       Serial.print(","); Serial.print(accel.acceleration.y);
       Serial.print(","); Serial.print(accel.acceleration.z);
       Serial.print(",");
-
-      Serial.print(gyro.gyro.x);
-      Serial.print(","); Serial.print(gyro.gyro.y);
-      Serial.print(","); Serial.print(gyro.gyro.z);
       Serial.println();
+
+      // Serial.print(gyro.gyro.x);
+      // Serial.print(","); Serial.print(gyro.gyro.y);
+      // Serial.print(","); Serial.print(gyro.gyro.z);
+      // Serial.println();
       //  delayMicroseconds(10000);
+
+      last_read = millis();
     }
   }
 }
