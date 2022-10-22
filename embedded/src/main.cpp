@@ -150,5 +150,8 @@ void loop() {
       digitalWrite(PWM_2L, LOW);
       digitalWrite(PWM_2R, LOW);
     }
+    else if (command == "auto") {
+      Serial.println("begin autonomous mode");
+    }
   }
 }

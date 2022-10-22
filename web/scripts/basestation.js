@@ -109,6 +109,14 @@ function setup() {
         command_pub.publish(command);
     });
 
+    $("#btn_auto").click(() => {
+        console.log("auto");
+        var command = new ROSLIB.Message({
+            data:"auto"
+        });
+        command_pub.publish(command);
+    });
+
     $("#btn_data").click(() => {
         download();
     });
@@ -280,27 +288,33 @@ function setup() {
     });
 }
 
-// window.addEventListener('keyup', function(event) {
-//     const key = event.key.toUpperCase();
-//     event.preventDefault();
-//     if (key == 'W') {
-//         $("#btn_halt").click();
-//     }
-//     else if (key == 'S') {
-//     }
-//     else if (key == 'A') {
-//     }
-//     else if (key == 'D') {
-//     }
-//     else if (key == 'Q') {
-//     }
-//     else if (key == 'E') {
-//     }
-// });
+window.addEventListener('keyup', function(event) {
+     const key = event.key.toUpperCase();
+     event.preventDefault();
+     if (key == 'W') {
+        $("#btn_halt").click();
+     }
+     else if (key == 'S') {
+        $("#btn_halt").click();
+     }
+     else if (key == 'A') {
+        $("#btn_halt").click();
+     }
+     else if (key == 'D') {
+        $("#btn_halt").click();
+     }
+     else if (key == 'Q') {
+        $("#btn_halt").click();
+     }
+     else if (key == 'E') {
+        $("#btn_halt").click();
+     }
+});
 
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
     event.preventDefault();
+    if (event.repeat) return;
     if (key == 'W') {
         $("#btn_forward").click();
     }
