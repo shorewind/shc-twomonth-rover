@@ -13,10 +13,10 @@ arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 #define LSM_MISO 12
 #define LSM_MOSI 11
 
-#define PWM_LF 4
-#define PWM_RF 5
-#define PWM_LB 6
-#define PWM_RB 7
+#define PWM_1L 2  // PWM_1 = forward
+#define PWM_1R 3
+#define PWM_2L 4  // PWM_2 = backward
+#define PWM_2R 5
 
 #define LED_PIN 25
 #define SEALEVELPRESSURE_HPA (1013.25)
@@ -27,10 +27,10 @@ Adafruit_LSM6DSOX sox;
 void setup() {
   // Initialize outputs
   pinMode(LED_PIN, OUTPUT);
-  pinMode(PWM_LF, OUTPUT);
-  pinMode(PWM_RF, OUTPUT);
-  pinMode(PWM_LB, OUTPUT);
-  pinMode(PWM_RB, OUTPUT);
+  pinMode(PWM_1L, OUTPUT);
+  pinMode(PWM_1R, OUTPUT);
+  pinMode(PWM_2L, OUTPUT);
+  pinMode(PWM_2R, OUTPUT);
   // Turn LED on for initialization
   digitalWrite(LED_PIN, HIGH);
 
@@ -38,10 +38,10 @@ void setup() {
   Serial.begin(115200);
   delay(100);
 
-  analogWrite(PWM_LF, 0);
-  analogWrite(PWM_RF, 0);
-  analogWrite(PWM_LB, 0);
-  analogWrite(PWM_RB, 0);
+  digitalWrite(PWM_1L, LOW);
+  digitalWrite(PWM_1R, LOW);
+  digitalWrite(PWM_2L, LOW);
+  digitalWrite(PWM_2R, LOW);
 
   // Turn LED off after serial initialization
   // digitalWrite(LED_PIN, LOW);
@@ -107,39 +107,48 @@ void loop() {
     else if (command == "forward") {
       Serial.println("move forward");
       Serial.println("motors on");
-      analogWrite(PWM_LF, 255);
-      analogWrite(PWM_RF, 255);
-      // delay(1000);
-    }
-    else if (command == "off") {
-      Serial.println("motors off");
-      analogWrite(PWM_LF, 0);
-      analogWrite(PWM_RF, 0);
+      digitalWrite(PWM_1L, HIGH);
+      digitalWrite(PWM_1R, HIGH);
+      digitalWrite(PWM_2L, LOW);
+      digitalWrite(PWM_2R, LOW);
     }
     else if (command == "backward") {
       Serial.println("move backward");
+      Serial.println("motors on");
+      digitalWrite(PWM_1L, LOW);
+      digitalWrite(PWM_1R, LOW);
+      digitalWrite(PWM_2L, HIGH);
+      digitalWrite(PWM_2R, HIGH);
     }
     else if (command == "left") {
       Serial.println("turn left");
       Serial.println("motors on");
-      analogWrite(PWM_LF, 255);
-      delay(1000);
-      Serial.println("motors off");
-      analogWrite(PWM_LF, 0);
+      digitalWrite(PWM_1L, LOW);
+      digitalWrite(PWM_1R, HIGH);
+      digitalWrite(PWM_2L, HIGH);
+      digitalWrite(PWM_2R, LOW);
     }
     else if (command == "right") {
       Serial.println("turn right");
       Serial.println("motors on");
-      analogWrite(PWM_RF, 255);
-      delay(1000);
-      Serial.println("motors off");
-      analogWrite(PWM_RF, 0);
+      digitalWrite(PWM_1L, HIGH);
+      digitalWrite(PWM_1R, LOW);
+      digitalWrite(PWM_2L, LOW);
+      digitalWrite(PWM_2R, HIGH);
     }
     else if (command == "extend") {
       Serial.println("extend arm");
     }
     else if (command == "retract") {
       Serial.println("retract arm");
+    }
+    else if (command == "halt") {
+      Serial.println("halt");
+      Serial.println("motors off");
+      digitalWrite(PWM_1L, LOW);
+      digitalWrite(PWM_1R, LOW);
+      digitalWrite(PWM_2L, LOW);
+      digitalWrite(PWM_2R, LOW);
     }
   }
 }

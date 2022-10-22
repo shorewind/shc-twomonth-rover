@@ -280,27 +280,23 @@ function setup() {
     });
 }
 
-/* window.addEventListener('keyup', function(event) {
-    const key = event.key.toUpperCase();
-    event.preventDefault();
-    if (key == 'W') {
-        console.log("stopforward");
-        var command = new ROSLIB.Message({
-            data:"stopforward"
-        });
-        command_pub.publish(command);
-    }
-    else if (key == 'S') {
-    }
-    else if (key == 'A') {
-    }
-    else if (key == 'D') {
-    }
-    else if (key == 'Q') {
-    }
-    else if (key == 'E') {
-    }
-}) */
+// window.addEventListener('keyup', function(event) {
+//     const key = event.key.toUpperCase();
+//     event.preventDefault();
+//     if (key == 'W') {
+//         $("#btn_halt").click();
+//     }
+//     else if (key == 'S') {
+//     }
+//     else if (key == 'A') {
+//     }
+//     else if (key == 'D') {
+//     }
+//     else if (key == 'Q') {
+//     }
+//     else if (key == 'E') {
+//     }
+// });
 
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
