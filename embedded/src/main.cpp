@@ -45,7 +45,7 @@ void setup() {
 
   // Manual mode LED on
   // digitalWrite(MANUAL_LED, HIGH);
-  
+
   digitalWrite(PWM_1L, LOW);
   digitalWrite(PWM_1R, LOW);
   digitalWrite(PWM_2L, LOW);
@@ -209,6 +209,8 @@ void loop() {
       digitalWrite(AUTO_LED, LOW); */
 
       Serial.println("end autonomous mode");
+    } 
+    else if (command == "LEDoff") {
     }
   }
 }

@@ -117,6 +117,14 @@ function setup() {
         command_pub.publish(command);
     });
 
+    $("#btn_LEDoff").click(() => {
+        console.log("LED off");
+        var command = new ROSLIB.Message({
+            data:"LEDoff"
+        });
+        command_pub.publish(command);
+    });
+
     $("#btn_data").click(() => {
         download();
     });
