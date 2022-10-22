@@ -13,6 +13,11 @@ arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 #define LSM_MISO 12
 #define LSM_MOSI 11
 
+#define PWM_LF 4
+#define PWM_RF 5
+#define PWM_LB 6
+#define PWM_RB 7
+
 #define LED_PIN 25
 #define SEALEVELPRESSURE_HPA (1013.25)
 
@@ -20,14 +25,23 @@ Adafruit_BMP3XX bmp;
 Adafruit_LSM6DSOX sox;
 
 void setup() {
-  // Initialize LED_PIN as an output
+  // Initialize outputs
   pinMode(LED_PIN, OUTPUT);
+  pinMode(PWM_LF, OUTPUT);
+  pinMode(PWM_RF, OUTPUT);
+  pinMode(PWM_LB, OUTPUT);
+  pinMode(PWM_RB, OUTPUT);
   // Turn LED on for initialization
   digitalWrite(LED_PIN, HIGH);
 
   // Configure serial transport
   Serial.begin(115200);
   delay(100);
+
+  analogWrite(PWM_LF, 0);
+  analogWrite(PWM_RF, 0);
+  analogWrite(PWM_LB, 0);
+  analogWrite(PWM_RB, 0);
 
   // Turn LED off after serial initialization
   // digitalWrite(LED_PIN, LOW);
@@ -89,17 +103,42 @@ void loop() {
 
     if (command == "ping") {
       Serial.println("pong");
-    } else if (command == "forward") {
+    }
+    else if (command == "forward") {
       Serial.println("move forward");
-    } else if (command == "backward") {
+      Serial.println("motors on");
+      analogWrite(PWM_LF, 255);
+      analogWrite(PWM_RF, 255);
+      // delay(1000);
+    }
+    else if (command == "off") {
+      Serial.println("motors off");
+      analogWrite(PWM_LF, 0);
+      analogWrite(PWM_RF, 0);
+    }
+    else if (command == "backward") {
       Serial.println("move backward");
-    } else if (command == "left") {
+    }
+    else if (command == "left") {
       Serial.println("turn left");
-    } else if (command == "right") {
+      Serial.println("motors on");
+      analogWrite(PWM_LF, 255);
+      delay(1000);
+      Serial.println("motors off");
+      analogWrite(PWM_LF, 0);
+    }
+    else if (command == "right") {
       Serial.println("turn right");
-    } else if (command == "extend") {
+      Serial.println("motors on");
+      analogWrite(PWM_RF, 255);
+      delay(1000);
+      Serial.println("motors off");
+      analogWrite(PWM_RF, 0);
+    }
+    else if (command == "extend") {
       Serial.println("extend arm");
-    } else if (command == "retract") {
+    }
+    else if (command == "retract") {
       Serial.println("retract arm");
     }
   }

@@ -272,6 +272,10 @@ function setup() {
     });
 }
 
+window.addEventListener('keyup', function(event) {
+
+})
+
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
     event.preventDefault();
