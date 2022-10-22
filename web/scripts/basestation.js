@@ -280,38 +280,36 @@ function setup() {
     });
 }
 
-// window.addEventListener('keyup', function(event) {
-//     const key = event.key.toUpperCase();
-//     event.preventDefault();
-//     if (key == 'W') {
-//         $("#btn_halt").click();
-//     }
-//     else if (key == 'S') {
-//     }
-//     else if (key == 'A') {
-//     }
-//     else if (key == 'D') {
-//     }
-//     else if (key == 'Q') {
-//     }
-//     else if (key == 'E') {
-//     }
-// });
+var key_pressed = "none";
+
+window.addEventListener('keyup', function(event) {
+    const key = event.key.toUpperCase();
+    event.preventDefault();
+    if (key == key_pressed) {
+        $("#btn_halt").click();
+        key_pressed = "none";
+    }
+});
 
 window.addEventListener('keydown', function(event) {
-    const key = event.key.toUpperCase()
+    if (event.repeat || key_pressed != "none") return;
+    const key = event.key.toUpperCase();
     event.preventDefault();
     if (key == 'W') {
         $("#btn_forward").click();
+        key_pressed = 'W';
     }
     else if (key == 'S') {
         $("#btn_backward").click();
+        key_pressed = 'S';
     }
     else if (key == 'A') {
         $("#btn_left").click();
+        key_pressed = 'A';
     }
     else if (key == 'D') {
         $("#btn_right").click();
+        key_pressed = 'D';
     }
     else if (key == 'Q') {
         $("#btn_extend").click();
