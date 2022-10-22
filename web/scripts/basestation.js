@@ -298,7 +298,7 @@ function setup() {
 
 window.addEventListener('keyup', function(event) {
      const key = event.key.toUpperCase();
-     event.preventDefault();
+     //event.preventDefault();
      if (key == 'W') {
         $("#btn_halt").click();
      }
@@ -321,7 +321,7 @@ window.addEventListener('keyup', function(event) {
 
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
-    event.preventDefault();
+    //event.preventDefault();
     if (event.repeat) return;
     if (key == 'W') {
         $("#btn_forward").click();
