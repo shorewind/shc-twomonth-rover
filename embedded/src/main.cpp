@@ -30,7 +30,7 @@ void setup() {
   delay(100);
 
   // Turn LED off after serial initialization
-  digitalWrite(LED_PIN, LOW);
+  // digitalWrite(LED_PIN, LOW);
 
   if (!bmp.begin_I2C(0x77, &Wire_)) {   // hardware I2C mode, can pass in address & alt Wire
     Serial.println("Could not find a valid BMP3 sensor, check wiring!");
@@ -87,10 +87,10 @@ void loop() {
     String command = Serial.readStringUntil('\n');
     command.trim();
 
-    if (command == "forward") {
-      Serial.println("move forward");
-    } else if (command == "ping") {
+    if (command == "ping") {
       Serial.println("pong");
+    } else if (command == "forward") {
+      Serial.println("move forward");
     } else if (command == "backward") {
       Serial.println("move backward");
     } else if (command == "left") {
@@ -101,32 +101,6 @@ void loop() {
       Serial.println("extend arm");
     } else if (command == "retract") {
       Serial.println("retract arm");
-    } else if (command == "data") {  // temp manual data command
-      if (!bmp.performReading()) {
-        Serial.println("Failed to perform reading :(");
-        delay(100);
-        return;
-      }
-
-      Serial.print(millis() / 1000.0);
-      Serial.print(",");
-      Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-      Serial.print(",");
-      Serial.print(bmp.temperature);
-      Serial.print(",");
-      Serial.print(bmp.pressure / 100.0);
-      Serial.print(",");
-
-      // Get a new normalized sensor event
-      sensors_event_t accel;
-      sensors_event_t gyro;
-      sensors_event_t temp;
-      sox.getEvent(&accel, &gyro, &temp);
-
-      Serial.print(accel.acceleration.x);
-      Serial.print(","); Serial.print(accel.acceleration.y);
-      Serial.print(","); Serial.print(accel.acceleration.z);
-      Serial.println();
     }
   }
 }

@@ -24,7 +24,7 @@ function setup() {
     ros.on('connection', function () {
         console.log('Connected to websocket server.');
         rosbridge_status.val("Connected");
-        pico_log.text("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z");
+        pico_log.val("Time (s), Altitude (m), Temperature (*C), Pressure (hPa), Accel X (m/s^2), Accel Y, Accel Z");
     });
 
     ros.on('error', function (error) {
@@ -35,7 +35,7 @@ function setup() {
     ros.on('close', function () {
         console.log('Connection to websocket server closed.');
         rosbridge_status.val("Closed");
-        pico_log.text('');
+        pico_log.val('');
     });
 
     pico_sub = new ROSLIB.Topic({
@@ -293,25 +293,26 @@ window.addEventListener('keydown', function(event) {
     else if (key == 'E') {
         $("#btn_retract").click();
     }
-    // temp random data generation
-    else if (key == 'P') {
-        console.log("plot");
-        var time = new Date().toTimeString().split(' ')[0];
-        addData(alt_chart, Math.floor(Math.random()*6));
-        addData(temp_chart, Math.floor(Math.random()*6));
-        addData(press_chart, Math.floor(Math.random()*6));
-        addTimeData(time);
-        addAccelData(accel_chart, 0, Math.floor(Math.random()*6));
-        addAccelData(accel_chart, 1, Math.floor(Math.random()*6));
-        addAccelData(accel_chart, 2, Math.floor(Math.random()*6));
-    }
-    else if (key == "ENTER") {  // temp manual data collection command
-        console.log("data");
-        var command = new ROSLIB.Message({
-            data:"data"
-        });
-        command_pub.publish(command);
-    }
+    // // temp random data generation
+    // else if (key == 'P') {
+    //     console.log("plot");
+    //     var time = new Date().toTimeString().split(' ')[0];
+    //     addData(alt_chart, Math.floor(Math.random()*6));
+    //     addData(temp_chart, Math.floor(Math.random()*6));
+    //     addData(press_chart, Math.floor(Math.random()*6));
+    //     addTimeData(time);
+    //     addAccelData(accel_chart, 0, Math.floor(Math.random()*6));
+    //     addAccelData(accel_chart, 1, Math.floor(Math.random()*6));
+    //     addAccelData(accel_chart, 2, Math.floor(Math.random()*6));
+    //     pico_log.val('[' + time + '] ' + "random data\n" + pico_log.val());
+    // }
+    // else if (key == "ENTER") {  // temp manual data collection command
+    //     console.log("data");
+    //     var command = new ROSLIB.Message({
+    //         data:"data"
+    //     });
+    //     command_pub.publish(command);
+    // }
 });
 
 var rows = [];
@@ -321,7 +322,7 @@ let csv_content = "data:text/csv;charset=utf-8,";
 function update_log(message) {
     var log = message.data;  // individual output
     var time = new Date().toTimeString().split(' ')[0];
-    pico_log.text('[' + time + '] ' + log + pico_log.text());
+    pico_log.val('[' + time + '] ' + log + pico_log.val());
     var data_array = log.split(',');
     if (!isNaN(data_array[0][0])) {
         let time = data_array[0];
