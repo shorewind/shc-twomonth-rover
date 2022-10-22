@@ -18,7 +18,9 @@ arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 #define PWM_2L 4  // PWM_2 = backward
 #define PWM_2R 5
 
-#define LED_PIN 25
+#define BUILTIN_LED 25
+// #define AUTO_LED 26
+// #define MANUAL_LED 27
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BMP3XX bmp;
@@ -26,25 +28,31 @@ Adafruit_LSM6DSOX sox;
 
 void setup() {
   // Initialize outputs
-  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUILTIN_LED, OUTPUT);
+  // pinMode(AUTO_LED, OUTPUT);
+  // pinMode(MANUAL_LED, OUTPUT);
   pinMode(PWM_1L, OUTPUT);
   pinMode(PWM_1R, OUTPUT);
   pinMode(PWM_2L, OUTPUT);
   pinMode(PWM_2R, OUTPUT);
+
   // Turn LED on for initialization
-  digitalWrite(LED_PIN, HIGH);
+  digitalWrite(BUILTIN_LED, HIGH);
 
   // Configure serial transport
   Serial.begin(115200);
   delay(100);
 
+  // Manual mode LED on
+  // digitalWrite(MANUAL_LED, HIGH);
+  
   digitalWrite(PWM_1L, LOW);
   digitalWrite(PWM_1R, LOW);
   digitalWrite(PWM_2L, LOW);
   digitalWrite(PWM_2R, LOW);
 
   // Turn LED off after serial initialization
-  // digitalWrite(LED_PIN, LOW);
+  // digitalWrite(BUILTIN_LED, LOW);
 
   if (!bmp.begin_I2C(0x77, &Wire_)) {   // hardware I2C mode, can pass in address & alt Wire
     Serial.println("Could not find a valid BMP3 sensor, check wiring!");
@@ -128,7 +136,7 @@ void loop() {
     else if (command == "auto") {
       Serial.println("begin autonomous mode");
 
-      /* digitalWrite(LED_PEN?, HIGH);
+      /* digitalWrite(AUTO_LED, HIGH);
       
       Forward 24 inches:
       forward();
@@ -198,7 +206,7 @@ void loop() {
       delay(time needed);
       halt();
       
-      digitalWrite(LED_PEN?, LOW); */
+      digitalWrite(AUTO_LED, LOW); */
 
       Serial.println("end autonomous mode");
     }
