@@ -101,6 +101,14 @@ function setup() {
         command_pub.publish(command);
     });
 
+    $("#btn_halt").click(() => {
+        console.log("halt");
+        var command = new ROSLIB.Message({
+            data:"halt"
+        });
+        command_pub.publish(command);
+    });
+
     $("#btn_data").click(() => {
         download();
     });
@@ -272,9 +280,27 @@ function setup() {
     });
 }
 
-window.addEventListener('keyup', function(event) {
-
-})
+/* window.addEventListener('keyup', function(event) {
+    const key = event.key.toUpperCase();
+    event.preventDefault();
+    if (key == 'W') {
+        console.log("stopforward");
+        var command = new ROSLIB.Message({
+            data:"stopforward"
+        });
+        command_pub.publish(command);
+    }
+    else if (key == 'S') {
+    }
+    else if (key == 'A') {
+    }
+    else if (key == 'D') {
+    }
+    else if (key == 'Q') {
+    }
+    else if (key == 'E') {
+    }
+}) */
 
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
@@ -296,6 +322,9 @@ window.addEventListener('keydown', function(event) {
     }
     else if (key == 'E') {
         $("#btn_retract").click();
+    } 
+    else if (key == 'H') {
+        $("#btn_halt").click();
     }
     // // temp random data generation
     // else if (key == 'P') {
