@@ -191,74 +191,79 @@ void loop() {
       digitalWrite(AUTO_LED, HIGH);
 
       delay(10000);
-      /*
-      Forward 24 inches:
+      // Forward 24 inches
       forward();
-      delay(time needed);
+      delay(3200);
       halt();
-
-      delay(2000);
-
-      Turn 90° counterclockwise:
+      
+      delay(10000);
+      
+      // Turn 90 degree counterclockwise
       left();
-      delay(time needed);
+      delay(1840);
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Forward 6 inches:
+      // Forward 6 inches
       forward();
-      delay(time needed);
+      delay(900);
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Turn 90° counterclockwise:
+      // Turn 90 degrees counterclockwise
+
       left();
-      delay(time needed);
+      delay(1840);
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Forward 18 inches:
+      // Forward 18 inches
       forward();
-      delay(time needed);
+      delay(2400)
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Backwards 12 inches:
+      // Backwards 12 inches
       backward();
-      delay(time needed);
+      delay(1600);
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Turn 270° clockwise:
+      // Turn 270 degrees clockwise
+
       right();
-      delay(time needed);
+      delay(5520);
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Forward 9 inches:
+      // Forward 9 inches
+
       forward();
-      delay(time needed);
+      delay(1200);
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      90° clockwise:
+      // 90 degrees clockwise
+
       right();
-      delay(time needed);
+      delay(1840)
       halt();
 
-      delay(2000);
+      delay(10000);
 
-      Forward 18 inches:
+      // Forward 18 inches
+
       forward();
-      delay(time needed);
-      halt();*/
+      delay(2400)
+      halt();
+
       
       digitalWrite(AUTO_LED, LOW); 
 

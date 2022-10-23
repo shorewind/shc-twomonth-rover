@@ -419,3 +419,5 @@ function addAccelData(chart, index, data) {
 }
 
 window.onload = setup;
+
+// Test
