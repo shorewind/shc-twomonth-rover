@@ -286,11 +286,7 @@ void loop() {
       // 90 degrees clockwise
 
       right();
-<<<<<<< Updated upstream
-      delay(1840);
-=======
-      delay(1400)
->>>>>>> Stashed changes
+      delay(1400);
       halt();
 
       delay(2000);
