@@ -119,18 +119,19 @@ void halt() {
   digitalWrite(PWM_1R, LOW);
   digitalWrite(PWM_2L, LOW);
   digitalWrite(PWM_2R, LOW);
-  armServo.write(90);
 }
 
 int last_read = 0;  // declare and initialize time of last read
+int last_read_servo = 0;
 
 void loop() {
-  if (millis() - last_read > 500) {  // automated data collection
-    if (!bmp.performReading()) {
+  int servoPos = 5;
+   if (millis() - last_read > 500) {  // automated data collection
+     if (!bmp.performReading()) {
       Serial.println("Failed to perform reading :(");
       delay(100);
       return;
-    }
+    } 
 
     Serial.print(millis() / 1000.0);
     Serial.print(",");
@@ -175,12 +176,42 @@ void loop() {
       right();
     }
     else if (command == "extend") {
-      Serial.println("extend arm");
-      armServo.write(95);
+      Serial.println("extending arm");
+      armServo.write(135);
+      servoPos = 135;
     }
     else if (command == "retract") {
-      Serial.println("retract arm");
-      armServo.write(85);
+      Serial.println("retracting arm");
+      armServo.write(5);
+      servoPos = 5;
+    }
+    else if (command == "extend_one") {
+      Serial.println("extending arm one degree");
+      if(servoPos <= 174) {
+        servoPos++;
+        armServo.write(servoPos);
+      }
+    }
+    else if (command == "retract_one") {
+      Serial.println("retracting arm one degree");
+      if(6 <= servoPos) {
+        servoPos--;
+        armServo.write(servoPos);
+      }
+    }
+    else if (command == "extend_ten") {
+      Serial.println("extending arm ten degrees");
+      if(servoPos <= 165) {
+        servoPos += 10;
+        armServo.write(servoPos);
+      }
+    }
+    else if (command == "retract_ten") {
+      Serial.println("retracting arm ten degrees");
+      if(15 <= servoPos) {
+        servoPos -= 10;
+        armServo.write(servoPos);
+      }
     }
     else if (command == "halt") {
       halt();
