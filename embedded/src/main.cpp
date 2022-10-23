@@ -229,51 +229,51 @@ void loop() {
       delay(3072);
       halt();
       
-      delay(10000);
+      delay(2000);
       
       // Turn 90 degree counterclockwise
       left();
-      delay(1840);
+      delay(1400);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Forward 6 inches
       forward();
       delay(831);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Turn 90 degrees counterclockwise
 
       left();
-      delay(1840);
+      delay(1400);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Forward 18 inches
       forward();
       delay(2274);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Backwards 12 inches
       backward();
       delay(1475);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Turn 270 degrees clockwise
 
       right();
-      delay(5520);
+      delay(4200);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Forward 9 inches
 
@@ -281,15 +281,19 @@ void loop() {
       delay(1080);
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // 90 degrees clockwise
 
       right();
+<<<<<<< Updated upstream
       delay(1840);
+=======
+      delay(1400)
+>>>>>>> Stashed changes
       halt();
 
-      delay(10000);
+      delay(2000);
 
       // Forward 18 inches
 
