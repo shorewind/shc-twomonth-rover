@@ -101,38 +101,6 @@ function setup() {
         command_pub.publish(command);
     });
 
-    $("#btn_extend_one").click(() => {
-        console.log("extend one");
-        var command = new ROSLIB.Message({
-            data:"extend_one"
-        });
-        command_pub.publish(command);
-    });
-
-    $("#btn_retract_one").click(() => {
-        console.log("retract one");
-        var command = new ROSLIB.Message({
-            data:"retract_one"
-        });
-        command_pub.publish(command);
-    });
-
-    $("#btn_extend_ten").click(() => {
-        console.log("extend ten");
-        var command = new ROSLIB.Message({
-            data:"extend_ten"
-        });
-        command_pub.publish(command);
-    });
-
-    $("#btn_retract_ten").click(() => {
-        console.log("retract ten");
-        var command = new ROSLIB.Message({
-            data:"retract_ten"
-        });
-        command_pub.publish(command);
-    });
-
     $("#btn_halt").click(() => {
         console.log("halt");
         var command = new ROSLIB.Message({
@@ -359,20 +327,32 @@ window.addEventListener('keydown', function(event) {
         key_pressed = 'E';
     } 
     else if (key == 'Z') {
-        $("#btn_extend_one").click();
-        key_pressed = 'Z';
+        console.log("extend one");
+        var command = new ROSLIB.Message({
+            data:"extend_one"
+        });
+        command_pub.publish(command);
     } 
     else if (key == 'C') {
-        $("#btn_retract_one").click();
-        key_pressed = 'C';
+        console.log("retract one");
+        var command = new ROSLIB.Message({
+            data:"retract_one"
+        });
+        command_pub.publish(command);
     } 
     else if (key == 'R') {
-        $("#btn_extend_ten").click();
-        key_pressed = 'R';
+        console.log("extend ten");
+        var command = new ROSLIB.Message({
+            data:"extend_ten"
+        });
+        command_pub.publish(command);
     } 
     else if (key == 'Y') {
-        $("#btn_retract_ten").click();
-        key_pressed = 'Y';
+        console.log("retract ten");
+        var command = new ROSLIB.Message({
+            data:"retract_ten"
+        });
+        command_pub.publish(command);
     }
     else if (key == 'H') {
         $("#btn_halt").click();

@@ -55,6 +55,9 @@ void setup() {
   digitalWrite(PWM_2L, LOW);
   digitalWrite(PWM_2R, LOW);
 
+  // Initilize arm position
+  armServo.write(5);
+
   // Turn LED off after serial initialization
   digitalWrite(BUILTIN_LED, LOW);
 
@@ -224,7 +227,7 @@ void loop() {
       delay(10000);
       // Forward 24 inches
       forward();
-      delay(3200);
+      delay(3072);
       halt();
       
       delay(10000);
@@ -238,7 +241,7 @@ void loop() {
 
       // Forward 6 inches
       forward();
-      delay(900);
+      delay(831);
       halt();
 
       delay(10000);
@@ -253,14 +256,14 @@ void loop() {
 
       // Forward 18 inches
       forward();
-      delay(2400);
+      delay(2274);
       halt();
 
       delay(10000);
 
       // Backwards 12 inches
       backward();
-      delay(1600);
+      delay(1475);
       halt();
 
       delay(10000);
@@ -276,7 +279,7 @@ void loop() {
       // Forward 9 inches
 
       forward();
-      delay(1200);
+      delay(1080);
       halt();
 
       delay(10000);
@@ -292,7 +295,7 @@ void loop() {
       // Forward 18 inches
 
       forward();
-      delay(2400);
+      delay(2274);
       halt();
 
       
