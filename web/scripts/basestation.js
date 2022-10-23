@@ -53,7 +53,7 @@ function setup() {
 
     $("#rosbridge_connect").click(connect_rosbridge);
 
-    $("#btn_forward").click(() => {
+    /* $("#btn_forward").click(() => {
         console.log("forward");
         var command = new ROSLIB.Message({
             data:"forward"
@@ -83,7 +83,7 @@ function setup() {
             data:"right"
         });
         command_pub.publish(command);
-    });
+    }); */
     
     $("#btn_extend").click(() => {
         console.log("extend");
@@ -113,6 +113,14 @@ function setup() {
         console.log("auto");
         var command = new ROSLIB.Message({
             data:"auto"
+        });
+        command_pub.publish(command);
+    });
+
+    $("#btn_LEDoff").click(() => {
+        console.log("LED off");
+        var command = new ROSLIB.Message({
+            data:"LEDoff"
         });
         command_pub.publish(command);
     });
@@ -290,7 +298,7 @@ function setup() {
 
 window.addEventListener('keyup', function(event) {
      const key = event.key.toUpperCase();
-     event.preventDefault();
+     //event.preventDefault();
      if (key == 'W') {
         $("#btn_halt").click();
      }
@@ -313,7 +321,7 @@ window.addEventListener('keyup', function(event) {
 
 window.addEventListener('keydown', function(event) {
     const key = event.key.toUpperCase()
-    event.preventDefault();
+    //event.preventDefault();
     if (event.repeat) return;
     if (key == 'W') {
         $("#btn_forward").click();
