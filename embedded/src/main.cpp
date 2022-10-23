@@ -20,8 +20,8 @@ arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 #define PWM_2R 5
 
 #define BUILTIN_LED 25
-#define AUTO_LED 26
-#define MANUAL_LED 27
+#define AUTO_LED 16
+#define MANUAL_LED 17
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BMP3XX bmp;
@@ -76,8 +76,6 @@ void setup() {
   sox.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 }
 
-int last_read = 0;  // declare and initialize time of last read
-
 void forward() {
   Serial.println("move forward");
   Serial.println("motors on");
@@ -123,6 +121,8 @@ void halt() {
   digitalWrite(PWM_2R, LOW);
   armServo.write(90);
 }
+
+int last_read = 0;  // declare and initialize time of last read
 
 void loop() {
   if (millis() - last_read > 500) {  // automated data collection
