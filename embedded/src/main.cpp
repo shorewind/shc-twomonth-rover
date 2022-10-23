@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <servo.h>
+#include <Servo.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
 #include <Adafruit_LSM6DSOX.h>
