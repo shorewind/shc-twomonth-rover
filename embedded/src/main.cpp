@@ -264,8 +264,5 @@ void loop() {
 
       Serial.println("end autonomous mode");
     } 
-    else if (command == "LEDoff") {
-      digitalWrite(MANUAL_LED, LOW);
-    }
   }
 }
