@@ -121,10 +121,10 @@ void halt() {
   digitalWrite(PWM_1R, LOW);
   digitalWrite(PWM_2L, LOW);
   digitalWrite(PWM_2R, LOW);
+  armServo.write(90);
 }
 
 void loop() {
-  int armPos = 0;
   if (millis() - last_read > 500) {  // automated data collection
     if (!bmp.performReading()) {
       Serial.println("Failed to perform reading :(");
@@ -176,19 +176,11 @@ void loop() {
     }
     else if (command == "extend") {
       Serial.println("extend arm");
-      while((0 <= armPos) && (armPos <= 179)){
-        armPos += 1;
-        armServo.write(armPos);
-        delay(15);
-      }
+      armServo.write(95);
     }
     else if (command == "retract") {
       Serial.println("retract arm");
-      while((1 <= armPos) && (armPos <= 180)){
-        armPos -= 1;
-        armServo.write(armPos);
-        delay(15);
-      }
+      armServo.write(85);
     }
     else if (command == "halt") {
       halt();
