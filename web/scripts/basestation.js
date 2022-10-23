@@ -53,7 +53,7 @@ function setup() {
 
     $("#rosbridge_connect").click(connect_rosbridge);
 
-    /* $("#btn_forward").click(() => {
+    $("#btn_forward").click(() => {
         console.log("forward");
         var command = new ROSLIB.Message({
             data:"forward"
@@ -83,7 +83,7 @@ function setup() {
             data:"right"
         });
         command_pub.publish(command);
-    }); */
+    });
     
     $("#btn_extend").click(() => {
         console.log("extend");
@@ -296,7 +296,7 @@ function setup() {
     });
 }
 
-window.addEventListener('keyup', function(event) {
+/* window.addEventListener('keyup', function(event) {
      const key = event.key.toUpperCase();
      //event.preventDefault();
      if (key == 'W') {
@@ -317,29 +317,47 @@ window.addEventListener('keyup', function(event) {
      else if (key == 'E') {
         $("#btn_halt").click();
      }
+}); */
+
+var key_pressed = "none";
+
+window.addEventListener('keyup', function(event) {
+    const key = event.key.toUpperCase();
+    //event.preventDefault();
+    if (key == key_pressed) {
+        $("#btn_halt").click();
+        key_pressed = "none";
+    }
 });
 
 window.addEventListener('keydown', function(event) {
+    if (event.repeat || key_pressed != "none") return;
     const key = event.key.toUpperCase()
     //event.preventDefault();
     if (event.repeat) return;
     if (key == 'W') {
         $("#btn_forward").click();
+        key_pressed = 'W';
     }
     else if (key == 'S') {
         $("#btn_backward").click();
+        key_pressed = 'S';
     }
     else if (key == 'A') {
         $("#btn_left").click();
+        key_pressed = 'A';
     }
     else if (key == 'D') {
         $("#btn_right").click();
+        key_pressed = 'D';
     }
     else if (key == 'Q') {
         $("#btn_extend").click();
+        key_pressed = 'Q';
     }
     else if (key == 'E') {
         $("#btn_retract").click();
+        key_pressed = 'E';
     } 
     else if (key == 'H') {
         $("#btn_halt").click();
