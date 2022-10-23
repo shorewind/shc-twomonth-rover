@@ -253,7 +253,7 @@ void loop() {
 
       // Forward 18 inches
       forward();
-      delay(2400)
+      delay(2400);
       halt();
 
       delay(10000);
@@ -284,7 +284,7 @@ void loop() {
       // 90 degrees clockwise
 
       right();
-      delay(1840)
+      delay(1840);
       halt();
 
       delay(10000);
@@ -292,7 +292,7 @@ void loop() {
       // Forward 18 inches
 
       forward();
-      delay(2400)
+      delay(2400);
       halt();
 
       
