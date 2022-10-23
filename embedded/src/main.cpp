@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <servo.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
 #include <Adafruit_LSM6DSOX.h>
@@ -19,22 +20,25 @@ arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 #define PWM_2R 5
 
 #define BUILTIN_LED 25
-// #define AUTO_LED 26
-// #define MANUAL_LED 27
+#define AUTO_LED 26
+#define MANUAL_LED 27
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BMP3XX bmp;
 Adafruit_LSM6DSOX sox;
+Servo armServo;
 
 void setup() {
   // Initialize outputs
   pinMode(BUILTIN_LED, OUTPUT);
-  // pinMode(AUTO_LED, OUTPUT);
-  // pinMode(MANUAL_LED, OUTPUT);
+  pinMode(AUTO_LED, OUTPUT);
+  pinMode(MANUAL_LED, OUTPUT);
   pinMode(PWM_1L, OUTPUT);
   pinMode(PWM_1R, OUTPUT);
   pinMode(PWM_2L, OUTPUT);
   pinMode(PWM_2R, OUTPUT);
+
+  armServo.attach(22);
 
   // Turn LED on for initialization
   digitalWrite(BUILTIN_LED, HIGH);
@@ -44,7 +48,7 @@ void setup() {
   delay(100);
 
   // Manual mode LED on
-  // digitalWrite(MANUAL_LED, HIGH);
+  digitalWrite(MANUAL_LED, HIGH);
 
   digitalWrite(PWM_1L, LOW);
   digitalWrite(PWM_1R, LOW);
@@ -52,7 +56,7 @@ void setup() {
   digitalWrite(PWM_2R, LOW);
 
   // Turn LED off after serial initialization
-  // digitalWrite(BUILTIN_LED, LOW);
+  digitalWrite(BUILTIN_LED, LOW);
 
   if (!bmp.begin_I2C(0x77, &Wire_)) {   // hardware I2C mode, can pass in address & alt Wire
     Serial.println("Could not find a valid BMP3 sensor, check wiring!");
@@ -74,7 +78,53 @@ void setup() {
 
 int last_read = 0;  // declare and initialize time of last read
 
+void forward() {
+  Serial.println("move forward");
+  Serial.println("motors on");
+  digitalWrite(PWM_1L, HIGH);
+  digitalWrite(PWM_1R, HIGH);
+  digitalWrite(PWM_2L, LOW);
+  digitalWrite(PWM_2R, LOW);
+}
+
+void backward() {
+  Serial.println("move backward");
+  Serial.println("motors on");
+  digitalWrite(PWM_1L, LOW);
+  digitalWrite(PWM_1R, LOW);
+  digitalWrite(PWM_2L, HIGH);
+  digitalWrite(PWM_2R, HIGH);
+}
+
+void left() {
+  Serial.println("turn left");
+  Serial.println("motors on");
+  digitalWrite(PWM_1L, LOW);
+  digitalWrite(PWM_1R, HIGH);
+  digitalWrite(PWM_2L, HIGH);
+  digitalWrite(PWM_2R, LOW);
+}
+
+void right() {
+  Serial.println("turn right");
+  Serial.println("motors on");
+  digitalWrite(PWM_1L, HIGH);
+  digitalWrite(PWM_1R, LOW);
+  digitalWrite(PWM_2L, LOW);
+  digitalWrite(PWM_2R, HIGH);
+}
+
+void halt() {
+  Serial.println("halt");
+  Serial.println("motors off");
+  digitalWrite(PWM_1L, LOW);
+  digitalWrite(PWM_1R, LOW);
+  digitalWrite(PWM_2L, LOW);
+  digitalWrite(PWM_2R, LOW);
+}
+
 void loop() {
+  int armPos = 0;
   if (millis() - last_read > 500) {  // automated data collection
     if (!bmp.performReading()) {
       Serial.println("Failed to perform reading :(");
@@ -125,10 +175,20 @@ void loop() {
       right();
     }
     else if (command == "extend") {
-      extend();
+      Serial.println("extend arm");
+      while((0 <= armPos) && (armPos <= 179)){
+        armPos += 1;
+        armServo.write(armPos);
+        delay(15);
+      }
     }
     else if (command == "retract") {
-      retract();
+      Serial.println("retract arm");
+      while((1 <= armPos) && (armPos <= 180)){
+        armPos -= 1;
+        armServo.write(armPos);
+        delay(15);
+      }
     }
     else if (command == "halt") {
       halt();
@@ -136,8 +196,10 @@ void loop() {
     else if (command == "auto") {
       Serial.println("begin autonomous mode");
 
-      /* digitalWrite(AUTO_LED, HIGH);
-      
+      digitalWrite(AUTO_LED, HIGH);
+
+      delay(10000);
+      /*
       Forward 24 inches:
       forward();
       delay(time needed);
@@ -204,67 +266,14 @@ void loop() {
       Forward 18 inches:
       forward();
       delay(time needed);
-      halt();
+      halt();*/
       
-      digitalWrite(AUTO_LED, LOW); */
+      digitalWrite(AUTO_LED, LOW); 
 
       Serial.println("end autonomous mode");
     } 
     else if (command == "LEDoff") {
-      //digitalWrite(MANUAL_LED, LOW);
+      digitalWrite(MANUAL_LED, LOW);
     }
   }
-}
-
-void forward() {
-  Serial.println("move forward");
-  Serial.println("motors on");
-  digitalWrite(PWM_1L, HIGH);
-  digitalWrite(PWM_1R, HIGH);
-  digitalWrite(PWM_2L, LOW);
-  digitalWrite(PWM_2R, LOW);
-}
-
-void backward() {
-  Serial.println("move backward");
-  Serial.println("motors on");
-  digitalWrite(PWM_1L, LOW);
-  digitalWrite(PWM_1R, LOW);
-  digitalWrite(PWM_2L, HIGH);
-  digitalWrite(PWM_2R, HIGH);
-}
-
-void left() {
-  Serial.println("turn left");
-  Serial.println("motors on");
-  digitalWrite(PWM_1L, LOW);
-  digitalWrite(PWM_1R, HIGH);
-  digitalWrite(PWM_2L, HIGH);
-  digitalWrite(PWM_2R, LOW);
-}
-
-void right() {
-  Serial.println("turn right");
-  Serial.println("motors on");
-  digitalWrite(PWM_1L, HIGH);
-  digitalWrite(PWM_1R, LOW);
-  digitalWrite(PWM_2L, LOW);
-  digitalWrite(PWM_2R, HIGH);
-}
-
-void extend() {
-  Serial.println("extend arm");
-}
-
-void retract() {
-  Serial.println("retract arm");
-}
-
-void halt() {
-  Serial.println("halt");
-  Serial.println("motors off");
-  digitalWrite(PWM_1L, LOW);
-  digitalWrite(PWM_1R, LOW);
-  digitalWrite(PWM_2L, LOW);
-  digitalWrite(PWM_2R, LOW);
 }

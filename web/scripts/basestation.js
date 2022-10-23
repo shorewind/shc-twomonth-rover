@@ -53,7 +53,7 @@ function setup() {
 
     $("#rosbridge_connect").click(connect_rosbridge);
 
-    $("#btn_forward").click(() => {
+    /* $("#btn_forward").click(() => {
         console.log("forward");
         var command = new ROSLIB.Message({
             data:"forward"
@@ -83,7 +83,7 @@ function setup() {
             data:"right"
         });
         command_pub.publish(command);
-    });
+    }); */
     
     $("#btn_extend").click(() => {
         console.log("extend");
