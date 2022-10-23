@@ -55,7 +55,7 @@ void setup() {
   digitalWrite(PWM_2L, LOW);
   digitalWrite(PWM_2R, LOW);
 
-  // Initilize arm position
+  // Initialize servoPos
   armServo.write(5);
 
   // Turn LED off after serial initialization
@@ -126,9 +126,9 @@ void halt() {
 
 int last_read = 0;  // declare and initialize time of last read
 int last_read_servo = 0;
+int servoPos = 5;
 
 void loop() {
-  int servoPos = 5;
    if (millis() - last_read > 500) {  // automated data collection
      if (!bmp.performReading()) {
       Serial.println("Failed to perform reading :(");
@@ -180,42 +180,41 @@ void loop() {
     }
     else if (command == "extend") {
       Serial.println("extending arm");
-      armServo.write(135);
-      servoPos = 135;
+      //Serial.println("pos before 165: " + servoPos);
+      servoPos = 165;
+      armServo.write(servoPos);
     }
     else if (command == "retract") {
       Serial.println("retracting arm");
-      armServo.write(5);
-      servoPos = 5;
+      //Serial.println("pos before 135: " + servoPos);
+      servoPos = 135;
+      armServo.write(servoPos);
     }
     else if (command == "extend_one") {
       Serial.println("extending arm one degree");
       if(servoPos <= 174) {
         servoPos++;
-        armServo.write(servoPos);
       }
+      //Serial.println("pos after +1: " + servoPos);
     }
     else if (command == "retract_one") {
       Serial.println("retracting arm one degree");
       if(6 <= servoPos) {
         servoPos--;
-        armServo.write(servoPos);
       }
+      //Serial.println("pos after -1: " + servoPos);
     }
     else if (command == "extend_ten") {
-      Serial.println("extending arm ten degrees");
-      if(servoPos <= 165) {
-        servoPos += 10;
-        armServo.write(servoPos);
-      }
+      Serial.println("Going to position");
+      //Serial.println("pos before unique pos: " + servoPos);
+      armServo.write(servoPos);
     }
-    else if (command == "retract_ten") {
+    /* else if (command == "retract_ten") {
       Serial.println("retracting arm ten degrees");
       if(15 <= servoPos) {
         servoPos -= 10;
-        armServo.write(servoPos);
       }
-    }
+    } */
     else if (command == "halt") {
       halt();
     }

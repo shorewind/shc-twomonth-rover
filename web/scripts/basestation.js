@@ -341,19 +341,19 @@ window.addEventListener('keydown', function(event) {
         command_pub.publish(command);
     } 
     else if (key == 'R') {
-        console.log("extend ten");
+        console.log("Set position");
         var command = new ROSLIB.Message({
             data:"extend_ten"
         });
         command_pub.publish(command);
     } 
-    else if (key == 'Y') {
+    /* else if (key == 'Y') {
         console.log("retract ten");
         var command = new ROSLIB.Message({
             data:"retract_ten"
         });
         command_pub.publish(command);
-    }
+    } */
     else if (key == 'H') {
         $("#btn_halt").click();
     }
