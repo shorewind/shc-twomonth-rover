@@ -180,13 +180,11 @@ void loop() {
     }
     else if (command == "extend") {
       Serial.println("extending arm");
-      //Serial.println("pos before 165: " + servoPos);
       servoPos = 165;
       armServo.write(servoPos);
     }
     else if (command == "retract") {
       Serial.println("retracting arm");
-      //Serial.println("pos before 135: " + servoPos);
       servoPos = 135;
       armServo.write(servoPos);
     }
@@ -195,110 +193,88 @@ void loop() {
       if(servoPos <= 174) {
         servoPos++;
       }
-      //Serial.println("pos after +1: " + servoPos);
     }
     else if (command == "retract_one") {
       Serial.println("retracting arm one degree");
       if(6 <= servoPos) {
         servoPos--;
       }
-      //Serial.println("pos after -1: " + servoPos);
     }
-    else if (command == "extend_ten") {
+    else if (command == "set_pos") {
       Serial.println("Going to position");
-      //Serial.println("pos before unique pos: " + servoPos);
       armServo.write(servoPos);
     }
-    /* else if (command == "retract_ten") {
-      Serial.println("retracting arm ten degrees");
-      if(15 <= servoPos) {
-        servoPos -= 10;
-      }
-    } */
     else if (command == "halt") {
       halt();
     }
     else if (command == "auto") {
       Serial.println("begin autonomous mode");
-
       digitalWrite(AUTO_LED, HIGH);
+      digitalWrite(MANUAL_LED, LOW);
 
       delay(10000);
+
       // Forward 24 inches
       forward();
       delay(3072);
       halt();
-      
       delay(2000);
       
       // Turn 90 degree counterclockwise
       left();
       delay(1400);
       halt();
-
       delay(2000);
 
       // Forward 6 inches
       forward();
       delay(831);
       halt();
-
       delay(2000);
 
       // Turn 90 degrees counterclockwise
-
       left();
       delay(1400);
       halt();
-
       delay(2000);
 
       // Forward 18 inches
       forward();
       delay(2274);
       halt();
-
       delay(2000);
 
       // Backwards 12 inches
       backward();
       delay(1475);
       halt();
-
       delay(2000);
 
       // Turn 270 degrees clockwise
-
       right();
       delay(4200);
       halt();
-
       delay(2000);
 
       // Forward 9 inches
-
       forward();
       delay(1080);
       halt();
-
       delay(2000);
 
       // 90 degrees clockwise
-
       right();
       delay(1400);
       halt();
-
       delay(2000);
 
       // Forward 18 inches
-
       forward();
       delay(2274);
       halt();
 
-      
       digitalWrite(AUTO_LED, LOW); 
+      digitalWrite(MANUAL_LED, HIGH);
 
       Serial.println("end autonomous mode");
     } 

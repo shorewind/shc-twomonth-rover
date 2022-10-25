@@ -10,11 +10,11 @@ var command_pub;
 // Text box reference
 var pico_log;
 
+// Live charts
 var alt_chart;
 var temp_chart;
 var press_chart;
 var accel_chart;
-var gryo_chart;
 
 function setup() {
     pico_log = $("#pico_log");
@@ -300,8 +300,7 @@ window.addEventListener('keyup', function(event) {
 
 window.addEventListener('keydown', function(event) {
     if (event.repeat || key_pressed != "none") return;
-    const key = event.key.toUpperCase()
-    if (event.repeat) return;
+    const key = event.key.toUpperCase();
     if (key == 'W') {
         $("#btn_forward").click();
         key_pressed = 'W';
@@ -320,11 +319,9 @@ window.addEventListener('keydown', function(event) {
     }
     else if (key == 'Q') {
         $("#btn_extend").click();
-        key_pressed = 'Q';
     }
     else if (key == 'E') {
         $("#btn_retract").click();
-        key_pressed = 'E';
     } 
     else if (key == 'Z') {
         console.log("extend one");
@@ -343,40 +340,13 @@ window.addEventListener('keydown', function(event) {
     else if (key == 'R') {
         console.log("Set position");
         var command = new ROSLIB.Message({
-            data:"extend_ten"
+            data:"set_pos"
         });
         command_pub.publish(command);
     } 
-    /* else if (key == 'Y') {
-        console.log("retract ten");
-        var command = new ROSLIB.Message({
-            data:"retract_ten"
-        });
-        command_pub.publish(command);
-    } */
     else if (key == 'H') {
         $("#btn_halt").click();
     }
-    // // temp random data generation
-    // else if (key == 'P') {
-    //     console.log("plot");
-    //     var time = new Date().toTimeString().split(' ')[0];
-    //     addData(alt_chart, Math.floor(Math.random()*6));
-    //     addData(temp_chart, Math.floor(Math.random()*6));
-    //     addData(press_chart, Math.floor(Math.random()*6));
-    //     addTimeData(time);
-    //     addAccelData(accel_chart, 0, Math.floor(Math.random()*6));
-    //     addAccelData(accel_chart, 1, Math.floor(Math.random()*6));
-    //     addAccelData(accel_chart, 2, Math.floor(Math.random()*6));
-    //     pico_log.val('[' + time + '] ' + "random data\n" + pico_log.val());
-    // }
-    // else if (key == "ENTER") {  // temp manual data collection command
-    //     console.log("data");
-    //     var command = new ROSLIB.Message({
-    //         data:"data"
-    //     });
-    //     command_pub.publish(command);
-    // }
 });
 
 var rows = [];
