@@ -2,18 +2,20 @@
 #include <Wire.h>
 #include <Servo.h>
 #include <Adafruit_Sensor.h>
-#include <Adafruit_BMP3XX.h>
-#include <Adafruit_LSM6DSOX.h>
+#include <Adafruit_BMP3XX.h>  // barometric pressure and temperature sensor library
+#include <Adafruit_LSM6DSOX.h>  // acceleration sensor library
 
 #define WIRE_SDA 0  // Use GP0 as I2C0 SDA
 #define WIRE_SCL 1  // Use GP1 as I2C0 SCL
 arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 
+// accelerometer pin definitions
 #define LSM_CS 10
 #define LSM_SCK 13
 #define LSM_MISO 12
 #define LSM_MOSI 11
 
+// motor drivers pulse-width modulation GPIO pins
 #define PWM_1L 2  // PWM_1 = forward
 #define PWM_1R 3
 #define PWM_2L 4  // PWM_2 = backward
@@ -24,12 +26,13 @@ arduino::MbedI2C Wire_(WIRE_SDA, WIRE_SCL);
 #define MANUAL_LED 17
 #define SEALEVELPRESSURE_HPA (1013.25)
 
+// declare hardware instances
 Adafruit_BMP3XX bmp;
 Adafruit_LSM6DSOX sox;
 Servo armServo;
 
 void setup() {
-  // Initialize outputs
+  // initialize outputs
   pinMode(BUILTIN_LED, OUTPUT);
   pinMode(AUTO_LED, OUTPUT);
   pinMode(MANUAL_LED, OUTPUT);
@@ -38,27 +41,28 @@ void setup() {
   pinMode(PWM_2L, OUTPUT);
   pinMode(PWM_2R, OUTPUT);
 
-  armServo.attach(22);
+  armServo.attach(22);  // assign servo pin
 
-  // Turn LED on for initialization
+  // turn LED on for initialization
   digitalWrite(BUILTIN_LED, HIGH);
 
-  // Configure serial transport
-  Serial.begin(115200);
+  // configure serial transport
+  Serial.begin(115200);  // baud rate
   delay(100);
 
-  // Manual mode LED on
+  // manual mode LED on
   digitalWrite(MANUAL_LED, HIGH);
 
+  // initialize motor drivers
   digitalWrite(PWM_1L, LOW);
   digitalWrite(PWM_1R, LOW);
   digitalWrite(PWM_2L, LOW);
   digitalWrite(PWM_2R, LOW);
 
-  // Initialize servoPos
+  // initialize servoPos
   armServo.write(5);
 
-  // Turn LED off after serial initialization
+  // turn LED off after serial initialization
   digitalWrite(BUILTIN_LED, LOW);
 
   if (!bmp.begin_I2C(0x77, &Wire_)) {   // hardware I2C mode, can pass in address & alt Wire
@@ -69,7 +73,7 @@ void setup() {
     Serial.println("Failed to find LSM6DSOX chip");
   }
 
-  // Set up oversampling and filter initialization
+  // set up oversampling and filter initialization
   bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
@@ -79,6 +83,7 @@ void setup() {
   sox.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 }
 
+// movement controls functions
 void forward() {
   Serial.println("move forward");
   Serial.println("motors on");
@@ -115,7 +120,7 @@ void right() {
   digitalWrite(PWM_2R, HIGH);
 }
 
-void halt() {
+void halt() {  // turn all motors off
   Serial.println("halt");
   Serial.println("motors off");
   digitalWrite(PWM_1L, LOW);
@@ -126,10 +131,11 @@ void halt() {
 
 int last_read = 0;  // declare and initialize time of last read
 int last_read_servo = 0;
-int servoPos = 5;
+int servoPos = 5;  // declare and initialize arm servo position
 
 void loop() {
-   if (millis() - last_read > 500) {  // automated data collection
+  // automated data collection approximately every 500 ms
+  if (millis() - last_read > 500) {
      if (!bmp.performReading()) {
       Serial.println("Failed to perform reading :(");
       delay(100);
@@ -145,7 +151,7 @@ void loop() {
     Serial.print(bmp.pressure / 100.0);
     Serial.print(",");
 
-    // Get a new normalized sensor event
+    // get a new normalized sensor event
     sensors_event_t accel;
     sensors_event_t gyro;
     sensors_event_t temp;
@@ -156,10 +162,11 @@ void loop() {
     Serial.print(","); Serial.print(accel.acceleration.z);
     Serial.println();
 
-    last_read = millis();
+    last_read = millis();  // reassign time of last read
   }
   
   if (Serial.available()) {
+    // read command input from serial monitor
     String command = Serial.readStringUntil('\n');
     command.trim();
 
@@ -178,101 +185,105 @@ void loop() {
     else if (command == "right") {
       right();
     }
-    else if (command == "extend") {
+    else if (command == "extend") {  // move to set position
       Serial.println("extending arm");
       servoPos = 165;
       armServo.write(servoPos);
     }
-    else if (command == "retract") {
+    else if (command == "retract") {  // move to set position
       Serial.println("retracting arm");
       servoPos = 135;
       armServo.write(servoPos);
     }
-    else if (command == "extend_one") {
+    else if (command == "extend_one") {  // sets new position
       Serial.println("extending arm one degree");
       if(servoPos <= 174) {
         servoPos++;
       }
     }
-    else if (command == "retract_one") {
+    else if (command == "retract_one") {  // sets new position
       Serial.println("retracting arm one degree");
       if(6 <= servoPos) {
         servoPos--;
       }
     }
-    else if (command == "set_pos") {
-      Serial.println("Going to position");
+    else if (command == "set_pos") {  // move to new position
+      Serial.println("going to position");
       armServo.write(servoPos);
     }
     else if (command == "halt") {
       halt();
     }
     else if (command == "auto") {
+      // execute "follow the instructions" challenge
       Serial.println("begin autonomous mode");
+      // turn autonomous mode LED on, manual mode LED off
       digitalWrite(AUTO_LED, HIGH);
       digitalWrite(MANUAL_LED, LOW);
 
-      delay(10000);
+      // note: delays prevent data readings
+      delay(2000);  // delay 2 seconds
 
-      // Forward 24 inches
+      // forward 24 inches
       forward();
-      delay(3072);
+      delay(3072);  // manually timed how long it took for the rover to complete action
       halt();
       delay(2000);
       
-      // Turn 90 degree counterclockwise
+      // turn 90 degrees counterclockwise
       left();
       delay(1400);
       halt();
       delay(2000);
 
-      // Forward 6 inches
+      // forward 6 inches
       forward();
       delay(831);
       halt();
       delay(2000);
 
-      // Turn 90 degrees counterclockwise
+      // turn 90 degrees counterclockwise
       left();
       delay(1400);
       halt();
       delay(2000);
 
-      // Forward 18 inches
+      // forward 18 inches
       forward();
       delay(2274);
       halt();
       delay(2000);
 
-      // Backwards 12 inches
+      // backwards 12 inches
       backward();
       delay(1475);
       halt();
       delay(2000);
 
-      // Turn 270 degrees clockwise
+      // turn 270 degrees clockwise
       right();
       delay(4200);
       halt();
       delay(2000);
 
-      // Forward 9 inches
+      // forward 9 inches
       forward();
       delay(1080);
       halt();
       delay(2000);
 
-      // 90 degrees clockwise
+      // turn 90 degrees clockwise
       right();
       delay(1400);
       halt();
       delay(2000);
 
-      // Forward 18 inches
+      // forward 18 inches
       forward();
       delay(2274);
       halt();
 
+      // after instructions are executed, turn off autonomous mode LED and turn on manual mode LED
       digitalWrite(AUTO_LED, LOW); 
       digitalWrite(MANUAL_LED, HIGH);
 
