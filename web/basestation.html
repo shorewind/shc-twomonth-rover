@@ -2,11 +2,13 @@
 <head>
     <title>Rover Base Station</title>
 
+    <!-- link external scripts -->
     <script src = "./js/jquery-3.6.1.min.js"></script>
     <script src = "./js/roslib.js"></script>
     <script src = "./scripts/basestation.js"></script>
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
+    <!-- bootstrap CSS framework for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
@@ -17,7 +19,9 @@
     </div>
     <hr>
     <div class="row p-3">
+        <!-- column 1 -->
         <div class="col">
+            <!-- button controls card -->
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title text-center">
@@ -54,6 +58,7 @@
                     </div>
                 </div>
             </div>
+            <!-- pico output card -->
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">
@@ -67,17 +72,21 @@
                 </div>
             </div>
         </div>
+        <!-- column 2 -->
         <div class="col-4">
+            <!-- altitude plot card -->
             <div class="card">
                 <div class="card-body">
                     <canvas id="altitude" height="205"></canvas>
                 </div>
             </div>
+            <!-- pressure plot card -->
             <div class="card mt-3">
                 <div class="card-body">
                     <canvas id="pressure" height="205"></canvas>
                 </div>
             </div>
+            <!-- ROS connection card -->
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">
@@ -105,12 +114,15 @@
                 </div>
             </div>
         </div>
+        <!-- column 3 -->
         <div class="col-4">
+            <!-- temperature plot card -->
             <div class="card">
                 <div class="card-body">
                     <canvas id="temperature" height="205"></canvas>
                 </div>
             </div>
+            <!-- acceleration plot card -->
             <div class="card mt-3">
                 <div class="card-body">
                     <canvas id="acceleration" height="205"></canvas>
